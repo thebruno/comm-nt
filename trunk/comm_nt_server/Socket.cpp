@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "Socket.h"
 #define RECEIVE_BUFFER_SIZE 1024
 
 int Socket::SocketsCount = 0;

@@ -1,9 +1,6 @@
 #ifndef SOCKET_H
 #define SOCKET_H
-
-#include <WinSock2.h>
-
-#include <string>
+#include "stdafx.h"
 
 class SocketException : public std::exception {
 public:
@@ -13,7 +10,7 @@ public:
 	}
 };
 
-enum Result { OK, EMPTY, NOTEMPTY, DISCONNECTED, FAILED  };
+enum Result { OK, FAILED, EMPTY, NOTEMPTY, DISCONNECTED};
 
 class Socket{
 private:

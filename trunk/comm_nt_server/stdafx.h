@@ -15,8 +15,13 @@
 // TODO: reference additional headers your program requires here
 
 
-#include <process.h>
+
 #include <string>
+#include <sstream>
 #include <list>
+#include <vector>
 #include <iostream>
-#include "Socket.h"
+#include <process.h>
+#include <winsock2.h>
+#include <windows.h>
+

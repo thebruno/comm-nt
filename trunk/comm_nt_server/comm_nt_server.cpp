@@ -1,11 +1,16 @@
 // comm_nt_server.cpp : Defines the entry point for the console application.
-//
-
 #include "stdafx.h"
+#include "Utilities.h"
+#include "Socket.h"
+#include "Server.h"
 
 typedef std::list<Socket*> socket_list;
 
 socket_list g_connections;
+
+unsigned long __stdcall HandleUserConnect(void *param) {
+	return 0;
+}
 
 unsigned __stdcall Connection(void* a) {
   Socket* s = (Socket*) a;
@@ -34,13 +39,12 @@ unsigned __stdcall Connection(void* a) {
 }
 int _tmain(int argc, _TCHAR* argv[]){
 	ServerSocket in(2000,5);
-  
-  while (1) {
-    Socket* s=in.Accept();
-  
-    unsigned ret;
-    _beginthreadex(0, 0, Connection, (void*) s, 0, &ret);
-  }
+	while (1) {
+		Socket* s=in.Accept();
+		unsigned long ret;
+		CreateThread(0, 0,  HandleUserConnect, (void *) s, 0, &ret);
+		//_beginthreadex(0, 0, Connection, (void*) s, 0, &ret);
+	}
   
   return 0;
 }

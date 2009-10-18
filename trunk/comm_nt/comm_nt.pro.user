@@ -45,6 +45,7 @@
   <valuemap type="QVariantMap" >
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString" >Debug</value>
    <value key="QtVersionId" type="int" >0</value>
+   <value key="addQDumper" type="" ></value>
   </valuemap>
  </data>
  <data>
@@ -52,6 +53,7 @@
   <valuemap type="QVariantMap" >
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString" >Release</value>
    <value key="QtVersionId" type="int" >0</value>
+   <value key="addQDumper" type="" ></value>
   </valuemap>
  </data>
  <data>
@@ -70,6 +72,11 @@
     <value type="QString" >LOCALAPPDATA=C:\Users\Bruno\AppData\Local</value>
     <value type="QString" >LOGONSERVER=\\BRUNOPC</value>
     <value type="QString" >MOZ_PLUGIN_PATH=C:\Users\Bruno\AppData\Roaming\Nowe Gadu-Gadu\_userdata</value>
+    <value type="QString" >MPCONFIG_PRODUCTAPPDATAPATH=C:\ProgramData\Microsoft\Windows Defender</value>
+    <value type="QString" >MPCONFIG_PRODUCTCODENAME=AntiSpyware</value>
+    <value type="QString" >MPCONFIG_PRODUCTPATH=C:\Program Files\Windows Defender</value>
+    <value type="QString" >MPCONFIG_PRODUCTUSERAPPDATAPATH=C:\Users\Bruno\AppData\Local\Microsoft\Windows Defender</value>
+    <value type="QString" >MPCONFIG_REPORTINGGUID=A6261177-E39D-42F3-81CB-C78D43799222</value>
     <value type="QString" >NUMBER_OF_PROCESSORS=2</value>
     <value type="QString" >OPENSSL_CONF=C:\Program Files\OpenSSL\bin\openssl.cnf</value>
     <value type="QString" >OS=Windows_NT</value>
@@ -97,14 +104,14 @@
     <value type="QString" >WINDIR=C:\Windows</value>
    </valuelist>
    <valuelist key="abstractProcess.arguments" type="QVariantList" >
-    <value type="QString" >D:/Programming/PolSl/NT i Unix/nt/comm_nt/comm_nt.pro</value>
+    <value type="QString" >D:/Programming/PolSl/NT i Unix/nt/comm-nt/comm_nt/comm_nt.pro</value>
     <value type="QString" >-spec</value>
     <value type="QString" >win32-g++</value>
     <value type="QString" >-r</value>
    </valuelist>
    <value key="abstractProcess.command" type="QString" >C:/qt/qt/bin/qmake.exe</value>
-   <value key="abstractProcess.enabled" type="bool" >true</value>
-   <value key="abstractProcess.workingDirectory" type="QString" >D:/Programming/PolSl/NT i Unix/nt/comm_nt</value>
+   <value key="abstractProcess.enabled" type="bool" >false</value>
+   <value key="abstractProcess.workingDirectory" type="QString" >D:/Programming/PolSl/NT i Unix/nt/comm-nt/comm_nt</value>
    <value key="buildConfiguration" type="int" >2</value>
   </valuemap>
  </data>
@@ -124,6 +131,11 @@
     <value type="QString" >LOCALAPPDATA=C:\Users\Bruno\AppData\Local</value>
     <value type="QString" >LOGONSERVER=\\BRUNOPC</value>
     <value type="QString" >MOZ_PLUGIN_PATH=C:\Users\Bruno\AppData\Roaming\Nowe Gadu-Gadu\_userdata</value>
+    <value type="QString" >MPCONFIG_PRODUCTAPPDATAPATH=C:\ProgramData\Microsoft\Windows Defender</value>
+    <value type="QString" >MPCONFIG_PRODUCTCODENAME=AntiSpyware</value>
+    <value type="QString" >MPCONFIG_PRODUCTPATH=C:\Program Files\Windows Defender</value>
+    <value type="QString" >MPCONFIG_PRODUCTUSERAPPDATAPATH=C:\Users\Bruno\AppData\Local\Microsoft\Windows Defender</value>
+    <value type="QString" >MPCONFIG_REPORTINGGUID=A6261177-E39D-42F3-81CB-C78D43799222</value>
     <value type="QString" >NUMBER_OF_PROCESSORS=2</value>
     <value type="QString" >OPENSSL_CONF=C:\Program Files\OpenSSL\bin\openssl.cnf</value>
     <value type="QString" >OS=Windows_NT</value>
@@ -155,7 +167,7 @@
    </valuelist>
    <value key="abstractProcess.command" type="QString" >C:/qt/mingw/bin/mingw32-make.exe</value>
    <value key="abstractProcess.enabled" type="bool" >true</value>
-   <value key="abstractProcess.workingDirectory" type="QString" >D:/Programming/PolSl/NT i Unix/nt/comm_nt</value>
+   <value key="abstractProcess.workingDirectory" type="QString" >D:/Programming/PolSl/NT i Unix/nt/comm-nt/comm_nt</value>
   </valuemap>
  </data>
  <data>
