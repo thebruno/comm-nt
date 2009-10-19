@@ -5,112 +5,111 @@
 #include "BasicSystemClasses.h"
 #include "Socket.h"
 
-
-enum CommandType
+#define MESSAGE_SEPARATOR 0xFF
+#define MESSAGE_GROUP_USER_SEPARATOR 0xFE
+#define MESSAGE_USER_SEPARATOR 0xFD
+#define MESSAGE_QUEUE_LENGTH 1024
+enum MessageType
 {
-	CONNECT, LOGIN, DISCONNECT, LOGOUT, MESSAGE, GETUSERS, GETMESSAGE
+	// s = server
+	// c = client
+	// | - begining end ending of message
+	// # - separator = 0xff
+	NOTSET,
+	LOGIN, // add user to list on server, c->s, |LOGIN#USER#|
+	LOGOUT, // disconnectiong from server, c->s, |LOGOUT#USER#|
+	RESULT, // result of performed operation, s->c, |RESULT#OPERATION#RESULT#|
+	USERLIST, // list of users, s->c, |USERLIST#USER1#USER2#...#USERN#|
+	MESSAGE, // simple text message, c->s->c, |MESSAGE#FROM USER#TO USER#|
+	GROUPMESSAGE, // simple text message for group of recipients, c->s->c1, c2, c3, |MESSAGE#FROM USER#USER1#USER2#...#USERN|
 };
 
-std::string ToString(CommandType command);
-
-CommandType ToEnum(std::string s);
-
+std::string ToString(MessageType command);
+MessageType ToEnum(std::string s);
 
 
-class Packet 
-{
-public:
-	CommandType Command;
-	std::string Content;
-	std::string SourceIP;
-	std::string SourceUser;
-	std::string DestinationUser;
-	std::string DestintionGroup;
-	std::string Pack();
-	Packet(std::string s);
-};
+//HANDLE InputMutex;
+//InputMutex = CreateMutex(0, false, 0);
+//CloseHandle(InputMutex);
 
-class UserQueue
-{
 
-	std::list<Packet*> Input;
-	std::list<Packet*> Output;
-	HANDLE InputMutex, OutputMutex;
+struct User : public Serializable{
+	std::string Login;
+	std::string IP;
 	Socket * UserSocket;
-public:
-	UserQueue(Socket * s)
-	{
-		UserSocket = s;
-		InputMutex = CreateMutex(0, false, 0);
-		OutputMutex = CreateMutex(0, false, 0);
-	}
+	// byc mo¿e nie trzeba bêdzie u¿ywaæ
+	SysSemaphore* UserSocketAccess;
+	User(std::string login, std::string ip, ClientSocket * userSocket);
+	User(ClientSocket * userSocket);
+	User();
+	~User();
+	virtual std::string ToString();
+	virtual Result Parse(std::string &object);
+	bool operator==(const User & u2) const;
 
-	~UserQueue()
-	{
-		CloseHandle(InputMutex);
-		CloseHandle(OutputMutex);
-	}
-	void Write(Packet * packet){
-		Output.push_back(packet);
-	}
-	Packet * Read()
-	{
-		Packet * temp = Input.front();
-		Input.pop_front();
-	}
-	bool CanRead()
-	{		
-		return !Input.empty();
-	}
 };
 
-// ok
-class User{
+struct Group: public Serializable{
+	std::list<User > GroupMembers;
+	virtual std::string ToString();
+	virtual Result Parse(std::string &object);
+	bool operator==(const Group & u1) const;
 };
 
-class Group{
+struct Message: public Serializable {
+	MessageType Type;
+	User Sender;
+	Group Recipients;
+	std::string Text;
+	Message(MessageType type, User sender, Group recipients, std::string text);
+	Message();
+	virtual std::string ToString();
+	virtual Result Parse(std::string &object);
 };
-
-class Message{
-};
-
 
 class Server {
 private:
 	ServerSocket* ListenSocket;
-	std::list<User*> Users;
-	std::list<Group*> Grupes;
+	std::list<User> Users;
+	std::list<Group> Grupes;
 	// buffer from all users
 	std::list<Message*> InputMsgs;
 	// buffer for all users
 	std::list<Message*> OutputMsgs;
 	SysSemaphore * InputMsgsAccess;
 	SysSemaphore * OutputMsgsAccess;
+	SysSemaphore * NewMessage;
+
 	
 	static unsigned long __stdcall ListenerFunction(void*s);
 	static unsigned long __stdcall ReceiverFunction(void*s);
-	static unsigned long __stdcall SenderFunction(void*s);
+	//static unsigned long __stdcall SenderFunction(void*s);
 	static unsigned long __stdcall HandlerFunction(void*s);
 	
 	//static unsigned long (__stdcall *Handler)(void*s);
 	
 	SysThread *ListenerThread;
-	std::list<SysThread *> ReceiverThread;
-	SysThread *SenderThread;
+	std::list<SysThread *> ReceiverThreads;
+	//SysThread *SenderThread;
 	SysThread *HandlerThread;
 	void HandleMessage(Message* message);
 
 	//methods - not used if static is enough
-
+	User HandleClientConnection(Socket* s);
 
 public:
 	Server(int port, int maxConnections);
+	~Server();
+	Result Send(Message m);
+	Result Receive(Message &m);
 	//threads body
 	void DoListening();
-	void DoReceiving();
-	void DoSending();
+	void DoReceiving(Socket * userSocket);
+	//void DoSending();
 	void DoHandling();
-	// accept user and create therad? 
+	// accept user and create thread? 
 	//AcceptUser - 
+	void Stop();
+	void Start(int port, int maxConnections);
 };
 #endif
