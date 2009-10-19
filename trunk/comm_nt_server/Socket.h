@@ -1,6 +1,7 @@
 #ifndef SOCKET_H
 #define SOCKET_H
 #include "stdafx.h"
+#include "Utilities.h"
 
 class SocketException : public std::exception {
 public:
@@ -10,7 +11,6 @@ public:
 	}
 };
 
-enum Result { OK, FAILED, EMPTY, NOTEMPTY, DISCONNECTED};
 
 class Socket{
 private:

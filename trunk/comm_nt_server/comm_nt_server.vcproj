@@ -5,6 +5,10 @@
 	Name="comm_nt_server"
 	ProjectGUID="{5EBD00A0-5A25-4DEA-9FA0-C546FFC18ED7}"
 	RootNamespace="comm_nt_server"
+	SccProjectName="Svn"
+	SccAuxPath="Svn"
+	SccLocalPath="Svn"
+	SccProvider="SubversionScc"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
