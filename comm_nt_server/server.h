@@ -22,9 +22,9 @@ private:
 	std::list<Message> InputMsgs;
 	// buffer for all users
 	std::list<Message> OutputMsgs;
-	SysSemaphore * DataAccess;
-	SysSemaphore * InputMsgsAccess;
-	SysSemaphore * OutputMsgsAccess;
+	SysSemaphore * DataAccess; //for Sockets, Users and Groupes
+	SysSemaphore * InputMsgsAccess; // input buffer
+	SysSemaphore * OutputMsgsAccess; // output buffer
 	SysSemaphore * NewMessage;
 
 	
@@ -38,7 +38,7 @@ private:
 	SysThread *ListenerThread;
 	// dodaæ czyszenie w destruktorze
 	std::map<std::string, SysThread *> ReceiverThreads;
-	std::list <SysThread *> UnverifiedReceiverThreads;
+	std::map <Socket *, SysThread *> UnverifiedReceiverThreads;
 	//SysThread *SenderThread;
 	SysThread *HandlerThread;
 	void HandleMessage(Message* message);
@@ -51,11 +51,13 @@ private:
 	void RemoveGroup(Group &g);
 	void AddUser(User &u, Socket *s);
 	void AddGroup(Group &g);
+	void MapThreadToUser(User & u);
 
 public:
 	Server(int port, int maxConnections = 10, bool start = true);
 	~Server();
-	Result Send(Message m);
+	Result SendMessages();
+	Result Send(Message& m);
 	Result Receive(Message &m);
 	//threads body
 	void DoListening();

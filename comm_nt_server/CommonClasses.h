@@ -57,6 +57,8 @@ struct User : public Serializable{
 
 struct Group: public Serializable{
 	std::list<User > GroupMembers;
+	Group(std::list<User> &u);
+	Group();
 	virtual std::string ToString();
 	virtual Result Parse(std::string &object);
 	bool operator==(const Group & u1) const;
@@ -67,7 +69,8 @@ struct Message: public Serializable {
 	MessageType PreviousOperation;
 	Result PreviousResult;
 	std::string PreviusOperationInfo;
-	User InvolvedUser; //sometimes sender, sometimes receiver
+	User Sender; 
+	User Receiver;
 	Group InvolvedGroup; // sometimes usergroup, sometimes receivers
 	std::string Text;
 	Message(MessageType type, User involvedUser, Group involvedGroup, std::string text);
