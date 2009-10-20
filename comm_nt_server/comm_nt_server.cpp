@@ -38,31 +38,31 @@ unsigned __stdcall Connection(void* a) {
   return 0;
 }
 int _tmain(int argc, _TCHAR* argv[]){
-	//Server( 1986, 10);
+	Server * s = new Server(1986, 10);
 	//ServerSocket in(2000,5);
 	std::string temp;
 	while (1) {
 		//std::cin >> temp;
 		//std::cout << "\n" << temp;
-		User u("login", "ip", 0);
-		std::cout << u.ToString() << std::endl;
-		User u2("login2","ip2", 0);
-		Group g1;
-		g1.GroupMembers.push_back(u);
-		g1.GroupMembers.push_back(u2);
-		std::cout << g1.ToString()<< std::endl;
-		Group g2;
-		g2.Parse(g1.ToString());
-		std::cout << g2.ToString()<< std::endl;
-		User sender("send", "ipsend", 0);
-		Message m1 (MessageType::LOGIN, sender, g1, "zawartoœæ wiadomoœci");
-		std::cout << m1.ToString() << std::endl;
-		Message m2;
-		m2.Parse(m1.ToString());
-		std::cout << m2.ToString() << std::endl;
-		std::cout << (g1 == g2) << std::endl;
-		g1.GroupMembers.push_back(sender);
-		std::cout << (g1 == g2) << std::endl;
+		//User u("login", "ip", 0);
+		//std::cout << u.ToString() << std::endl;
+		//User u2("login2","ip2", 0);
+		//Group g1;
+		//g1.GroupMembers.push_back(u);
+		//g1.GroupMembers.push_back(u2);
+		//std::cout << g1.ToString()<< std::endl;
+		//Group g2;
+		//g2.Parse(g1.ToString());
+		//std::cout << g2.ToString()<< std::endl;
+		//User sender("send", "ipsend", 0);
+		//Message m1 (MessageType::LOGIN, sender, g1, "zawartoœæ wiadomoœci");
+		//std::cout << m1.ToString() << std::endl;
+		//Message m2;
+		//m2.Parse(m1.ToString());
+		//std::cout << m2.ToString() << std::endl;
+		//std::cout << (g1 == g2) << std::endl;
+		//g1.GroupMembers.push_back(sender);
+		//std::cout << (g1 == g2) << std::endl;
 
 		//_beginthreadex(0, 0, Connection, (void*) s, 0, &ret);
 	}

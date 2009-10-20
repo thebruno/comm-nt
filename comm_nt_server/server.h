@@ -73,9 +73,9 @@ private:
 	std::list<User> Users;
 	std::list<Group> Grupes;
 	// buffer from all users
-	std::list<Message*> InputMsgs;
+	std::list<Message> InputMsgs;
 	// buffer for all users
-	std::list<Message*> OutputMsgs;
+	std::list<Message> OutputMsgs;
 	SysSemaphore * InputMsgsAccess;
 	SysSemaphore * OutputMsgsAccess;
 	SysSemaphore * NewMessage;

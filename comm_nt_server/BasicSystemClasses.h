@@ -85,6 +85,7 @@ public:
 		SetHandle(CreateSemaphore(NULL, start, max, NULL));
 		if (GetHandle() == INVALID_HANDLE_VALUE || GetHandle() == 0){
 			//b³¹d
+			throw "blad konstruktora" ;
 		}
 	}
 	void Wait(){
@@ -92,7 +93,6 @@ public:
 			unsigned long result = WaitForSingleObject(GetHandle(),INFINITE);
 			if ( result == WAIT_OBJECT_0){
 				//MessageBox(0,L"asdf",L"asdf",0);
-
 			}
 		}
 	}
