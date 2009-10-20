@@ -1,7 +1,6 @@
 // comm_nt_server.cpp : Defines the entry point for the console application.
 #include "stdafx.h"
-#include "Utilities.h"
-#include "Socket.h"
+
 #include "Server.h"
 
 typedef std::list<Socket*> socket_list;

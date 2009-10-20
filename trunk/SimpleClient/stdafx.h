@@ -10,6 +10,5 @@
 #include <stdio.h>
 #include <tchar.h>
 
-
-
+#pragma warning (disable: 4482)
 // TODO: reference additional headers your program requires here

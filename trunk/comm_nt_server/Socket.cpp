@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Socket.h"
 #define RECEIVE_BUFFER_SIZE 1024
-
 int Socket::SocketsCount = 0;
 
 void Socket::Start() {
@@ -97,29 +96,32 @@ Result Socket::ReceiveBytes(std::string &s) {
 	return Result::OK;
 }
 
-Result Socket::ReceiveLine(std::string &s) {
+Result Socket::ReceiveBytes(std::string &s, char delimiter ) {
 	while (1) {
 		char c;
 		switch(recv(SocketHandle, &c, 1, 0)) {
-			case 0: // not connected anymore;
-				  // ... but last line sent
-				  // might not end in \n,
-				  // so return ret anyway.
+			case 0: 
 				return Result::DISCONNECTED;
-		case -1:
-			return Result::FAILED;
-			//      if (errno == EAGAIN) {
-			//        return ret;
-			//      } else {
-			//      // not connected anymore
-			//      return "";
-			//      }
+			case -1:
+				return Result::FAILED;
+				//      if (errno == EAGAIN) {
+				//        return ret;
+				//      } else {
+				//      // not connected anymore
+				//      return "";
+				//      }
 		}
-
-		s += c;
-		if (c == '\n')
+		if (c != delimiter)
+			s += c;
+		else 
 			return Result::OK;
 	}
+	return Result::OK;
+}
+
+
+Result Socket::ReceiveLine(std::string &s) {
+	return ReceiveBytes(s, '\n');
 }
 
 Result Socket::SendLine(std::string s) {
@@ -132,6 +134,14 @@ Result Socket::SendLine(std::string s) {
 
 Result Socket::SendBytes(const std::string& s) {
 	if (send(SocketHandle, s.c_str(), s.length(), 0) == SOCKET_ERROR)
+		return Result::FAILED;
+	return Result::OK;
+}
+
+Result Socket::SendBytes(const std::string& s, char delimiter) {
+	std::string temp = s;
+	temp += delimiter;
+	if (send(SocketHandle, temp.c_str(), temp.length(), 0) == SOCKET_ERROR)
 		return Result::FAILED;
 	return Result::OK;
 }
