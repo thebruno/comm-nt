@@ -48,7 +48,7 @@ void Server::DoListening(){
 	while (1) {
 		Socket* s = ListenSocket->Accept();
 		SysThread * receiverThread = new SysThread(Server::ReceiverFunction, (void *) &std::pair<Server *, Socket *>(this, s));
-		UnverifiedReceiverThreads.push_back(receiverThread);
+		UnverifiedReceiverThreads[s] = receiverThread;
 		receiverThread->Start();		
 	}
 }
@@ -71,7 +71,7 @@ void Server::DoReceiving(Socket *userSocket){
 		std::cout << "Cannot parse first message." << std::endl;
 		return ;
 	}
-	u = m.InvolvedUser;
+	u = m.Sender;
 	received.clear();
 	DataAccess->Wait();
 	if (m.Type == MessageType::LOGIN){
@@ -139,36 +139,80 @@ void Server::DoHandling(){
 		DataAccess->Wait();
 		switch (m.Type) {
 		case MessageType::LOGIN: {
+			// user ju¿ dodany przy odborze
+			MapThreadToUser(m.Sender);
+			//OutputMsgsAccess->Wait();
+			std::list<User>::iterator it;
+			for (it = Users.begin(); it != Users.end(); ++it) {
+				Message newMessage = Message(MessageType::USERLIST, *it, Group(Users), "");
+				this->Send(newMessage);
+				//OutputMsgs.push_back(newMessage);
+			}
+			// add messages for all users
+			//OutputMsgsAccess->Release();
 			// rozes³aæ info do reszty
 			break;
 		}
 		case MessageType::LOGOUT: {
+			// usun¹æ usera
+			// usun¹æ jego w¹tek
 			//rozes³aæ info do reszty
-
 			break;
 		}
 		case MessageType::RESULT: {
 			break;
 		}
 		case MessageType::USERLIST: {
+			// cannot occure at server side
 			break;
 		}
 		case MessageType::MESSAGE: {
+			this->Send(m);
 			break;
 		}
 		case MessageType::GROUPMESSAGE: {
+			// pass it to user group
 			break;
 		}
 		default:
 			std::cout << "Cannot handle this message: "<< m.ToString() << std::endl;
 		}
+		// sprawdziæ timeouty
+		SendMessages();
 		DataAccess->Release();
 	}
 }
 
-Result Server::Send(Message m){
+// do wywalenia!!
+Result Server::SendMessages(){
 	return Result::OK;
 }
+
+Result Server::Send(Message& m){
+	switch (m.Type) {
+		case MessageType::LOGIN: {	
+			break;
+		}
+		case MessageType::LOGOUT: {		
+			break;
+		}
+		case MessageType::RESULT: {			
+			break;
+		}
+		case MessageType::USERLIST: {		
+			return Sockets[m.InvolvedUser.ToString()]->SendBytes(m.ToString(), MESSAGE_DELIMITER);
+		}
+		case MessageType::MESSAGE: {	
+			break;
+		}
+		case MessageType::GROUPMESSAGE: {	
+			return Sockets[m.InvolvedGroup.GroupMembers.front().ToString()]->SendBytes(m.ToString(), MESSAGE_DELIMITER);
+		}
+		default:
+			break;
+	}
+}
+
 Result Receive(Message &m){
 	return Result::OK;
 }
@@ -196,11 +240,11 @@ void Server::Stop(){
 		delete ListenSocket;
 		ListenerThread->Terminate();
 		delete ListenerThread;
-		std::list<SysThread *>::iterator it;
+		std::map<Socket*, SysThread *>::iterator it;
 		for(it = UnverifiedReceiverThreads.begin(); it != UnverifiedReceiverThreads.end(); it++)
 		{
-			(*it)->Terminate();
-			delete *it;
+			it->second->Terminate();
+			delete it->second;
 		}
 		UnverifiedReceiverThreads.clear();
 		//TODO:
@@ -210,8 +254,7 @@ void Server::Stop(){
 		for(mit=ReceiverThreads.begin(); mit !=ReceiverThreads.end(); )
 		{
 			mit->second->Terminate();
-			delete mit->second;
-			
+			delete mit->second;			
 		}
 		ReceiverThreads.clear();
 		//SenderThread->Terminate();
@@ -242,6 +285,16 @@ void Server::AddUser(User &u, Socket *s){
 	Users.push_back(u);
 	Sockets[u.ToString()] = s;
 }
+void Server::MapThreadToUser(User & u) {
+	std::map<Socket *, SysThread *>::iterator it;
+	for (it = UnverifiedReceiverThreads.begin(); it != UnverifiedReceiverThreads.end(); ++it) {
+		if (it->first == Sockets[u.ToString()]) {
+			ReceiverThreads[u.ToString()] = it->second;
+			UnverifiedReceiverThreads.erase(it);
+			break;
+		}
+	}
+}
 // use semaphores!
 void Server::AddGroup(Group &g){
 	Groups.push_back(g);
@@ -263,3 +316,27 @@ void Server::RemoveUser(User &u){
 void Server::RemoveGroup(Group &g){
 	Groups.remove(g);
 }
+
+
+//switch (Type){
+//	case MessageType::LOGIN: {	
+//		break;
+//	}
+//	case MessageType::LOGOUT: {		
+//		break;
+//	}
+//	case MessageType::RESULT: {			
+//		break;
+//	}
+//	case MessageType::USERLIST: {		
+//		break;
+//	}
+//	case MessageType::MESSAGE: {	
+//		break;
+//	}
+//	case MessageType::GROUPMESSAGE: {	
+//		break;
+//	}
+//	default:
+//		break;
+//}

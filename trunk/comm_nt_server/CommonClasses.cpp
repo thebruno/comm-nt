@@ -121,6 +121,12 @@ std::string Group::ToString(){
 	return toReturn;
 }
 
+Group::Group(){}
+
+Group::Group(std::list<User> &u):GroupMembers(u){
+	 
+}
+
 Result Group::Parse(std::string &s){
 	User user;
 	std::vector<std::string> splitUsers = split(s, MESSAGE_GROUP_USER_SEPARATOR);
