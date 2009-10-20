@@ -174,7 +174,9 @@ Server::Server(int port, int maxConnections)
 	Start(port, maxConnections);
 }
 Server::~Server(){
-
+	delete NewMessage;
+	delete InputMsgsAccess;
+	delete OutputMsgsAccess;
 }
 
 //ok
@@ -200,7 +202,7 @@ unsigned long __stdcall Server::ReceiverFunction(void*s){
 //}
 
 unsigned long __stdcall Server::HandlerFunction(void*s){
-	Server * S = reinterpret_cast<Server*>(s);
+	Server * S = (Server *)(s);
 	S->DoHandling();
 	return 0;
 }
@@ -209,15 +211,44 @@ void Server::DoListening(){
 	while (1) {
 		Socket* s = ListenSocket->Accept();
 		SysThread * temp = new SysThread(Server::ReceiverFunction, (void *) &std::pair<Server *, Socket *>(this, s));
+		temp->Start();
 		//ReceiverThreads.push_back(
 	}
 }
 
-void Server::DoReceiving(Socket *userSocket){}
+// dodaæ multiviadomoœci...
+void Server::DoReceiving(Socket *userSocket){
+	while (1){
+		std::string received = "";
+		Socket const * const temp = static_cast<Socket const * const>(userSocket);
+		if (SelectSocket::CanRead(temp, true)) {
+			Result temp = userSocket->ReceiveBytes(received);
+			// odczytane wszystko?
+			if (temp == Result::EMPTY && received != "" ){
+				Message m;
+				m.Parse(received);
+				InputMsgsAccess->Wait();
+				InputMsgs.push_back(m);
+				InputMsgsAccess->Release();
+				NewMessage->Release();
+				std::cout << received << std::endl;
+				received = "";
+			}
+		}
+	}
+}
 
 //void Server::DoSending(){}
 
-void Server::DoHandling(){}
+void Server::DoHandling(){
+	while(1){
+		NewMessage->Wait();
+		InputMsgsAccess->Wait();
+		Message m = InputMsgs.back();
+		InputMsgs.pop_back();
+		InputMsgsAccess->Release();
+	}
+}
 
 Result Server::Send(Message m){
 	return Result::OK;
@@ -228,11 +259,11 @@ Result Receive(Message &m){
 
 void Server::Start(int port, int maxConnections){
 	ListenSocket = new ServerSocket(port, maxConnections);
-	InputMsgsAccess = new SysSemaphore(0,1);
-	OutputMsgsAccess = new SysSemaphore(0,1);
+	InputMsgsAccess = new SysSemaphore(1,1);
+	OutputMsgsAccess = new SysSemaphore(1,1);
 	NewMessage = new SysSemaphore(0,MESSAGE_QUEUE_LENGTH);
 	ListenerThread = new SysThread(Server::ListenerFunction, this);
-	HandlerThread = new SysThread(Server::HandlerFunction, this);
+	HandlerThread = new SysThread(Server::HandlerFunction,  &*this);
 
 	HandlerThread->Start();
 	ListenerThread->Start();
