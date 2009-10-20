@@ -46,7 +46,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(SolutionDir)\"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -181,6 +181,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\comm_nt_server\CommonClasses.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\comm_nt_server\Server.cpp"
 				>
 			</File>
@@ -224,10 +228,6 @@
 				RelativePath="..\comm_nt_server\Utilities.cpp"
 				>
 			</File>
-			<File
-				RelativePath="..\comm_nt_server\Utilities.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -235,11 +235,19 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath="..\comm_nt_server\CommonClasses.h"
+				>
+			</File>
+			<File
 				RelativePath=".\stdafx.h"
 				>
 			</File>
 			<File
 				RelativePath=".\targetver.h"
+				>
+			</File>
+			<File
+				RelativePath="..\comm_nt_server\Utilities.h"
 				>
 			</File>
 		</Filter>

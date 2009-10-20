@@ -36,11 +36,13 @@ public:
 
 	Result ReceiveLine(std::string &s);
 	Result ReceiveBytes(std::string &s);
+	Result ReceiveBytes(std::string &s, char delimiter);
 
 	// parameter is modified here
 	Result SendLine (std::string line);
 	//parameter is not modified here
 	Result SendBytes(const std::string& bytes);
+	Result SendBytes(const std::string& s, char delimiter);
 	void   Close();
 };
 

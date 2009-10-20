@@ -1,8 +1,5 @@
 #ifndef BASIC_SYSTEM_CLASSES_H
 #define BASIC_SYSTEM_CLASSES_H
-
-#define _CRT_SECURE_NO_DEPRECATE
-#define _CRT_SECURE_NO_WARNINGS
 #include "stdafx.h"
 
 //! Represents all objects which have handles

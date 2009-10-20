@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <tchar.h>
 
-
+#pragma warning (disable: 4482)
 
 // TODO: reference additional headers your program requires here
 
@@ -20,6 +20,7 @@
 #include <sstream>
 #include <list>
 #include <vector>
+#include <map>
 #include <iostream>
 #include <process.h>
 #include <winsock2.h>
