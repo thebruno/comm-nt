@@ -63,4 +63,6 @@ class SelectSocket {
 public:
 	static bool CanRead(Socket const * const s, bool blocking);
 }; 
+
+std::string GetHostName(std::string host);
 #endif
