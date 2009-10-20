@@ -10,11 +10,14 @@
 // dodaæ komunikat - disconnected?
 class Server {
 private:
+	int Port;
+	int MaxConnections;
+	bool Started;
 	ServerSocket* ListenSocket;
 	// sockets indexed by users
 	std::map<std::string, Socket*> Sockets;
 	std::list<User> Users;
-	std::list<Group> Grupes;
+	std::list<Group> Groups;
 	// buffer from all users
 	std::list<Message> InputMsgs;
 	// buffer for all users
@@ -33,16 +36,24 @@ private:
 	//static unsigned long (__stdcall *Handler)(void*s);
 	
 	SysThread *ListenerThread;
-	std::list<SysThread *> ReceiverThreads;
+	// dodaæ czyszenie w destruktorze
+	std::map<std::string, SysThread *> ReceiverThreads;
+	std::list <SysThread *> UnverifiedReceiverThreads;
 	//SysThread *SenderThread;
 	SysThread *HandlerThread;
 	void HandleMessage(Message* message);
 
 	//methods - not used if static is enough
 	User HandleClientConnection(Socket* s);
+	bool IsUserLogged(User &u);
+	bool IsGroupCreated(Group &g);
+	void RemoveUser(User &u);
+	void RemoveGroup(Group &g);
+	void AddUser(User &u, Socket *s);
+	void AddGroup(Group &g);
 
 public:
-	Server(int port, int maxConnections);
+	Server(int port, int maxConnections = 10, bool start = true);
 	~Server();
 	Result Send(Message m);
 	Result Receive(Message &m);
@@ -54,6 +65,6 @@ public:
 	// accept user and create thread? 
 	//AcceptUser - 
 	void Stop();
-	void Start(int port, int maxConnections);
+	void Start();
 };
 #endif

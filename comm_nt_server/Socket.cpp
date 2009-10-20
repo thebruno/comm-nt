@@ -204,7 +204,7 @@ ClientSocket::ClientSocket(const std::string& host, int port) : Socket() {
 	address.sin_addr = *((in_addr *)hostInfo->h_addr);
 	memset(&(address.sin_zero), 0, 8); 
 
-	if (/*::*/connect(SocketHandle, (sockaddr *) &address, sizeof(sockaddr))) {
+	if (::connect(SocketHandle, (sockaddr *) &address, sizeof(sockaddr))) {
 		throw SocketException(strerror(WSAGetLastError()));
 	}
 }
@@ -230,4 +230,13 @@ bool SelectSocket::CanRead(Socket const* const s, bool blocking) {
 	if (FD_ISSET(s->SocketHandle, &SocketArray)) 
 		return true;
 	return false;
+}
+
+std::string GetHostName(std::string host){
+	hostent *hostInfo;
+	if ((hostInfo = gethostbyname(host.c_str())) == 0) {
+		throw SocketException(strerror(errno));
+	}
+	std::string toReturn(hostInfo->h_name);
+	return toReturn;
 }
