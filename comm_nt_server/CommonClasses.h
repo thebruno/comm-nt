@@ -71,7 +71,7 @@ struct Message: public Serializable {
 	std::string PreviusOperationInfo;
 	User Sender; 
 	User Receiver;
-	Group InvolvedGroup; // sometimes usergroup, sometimes receivers
+	Group InvolvedGroup;
 	std::string Text;
 	Message(MessageType type, User sender, User receiver, Group involvedGroup, std::string text);
 	Message();

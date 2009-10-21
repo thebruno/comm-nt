@@ -6,9 +6,11 @@
 int _tmain(int argc, _TCHAR* argv[])
 {
 	ClientSocket Client("localhost", 1986);
-	User u2("login2","ip2");
+	User u1("ala","ip2");
 	Group g1;
-	g1.GroupMembers.push_back(u2);
+	g1.GroupMembers.push_back(User("ala", "IP"));
+	g1.GroupMembers.push_back(User("ola", "IP"));
+	//g1.GroupMembers.push_back(User("jola", "ip"));
 
 	std::string temp = "";
 	std::string received = "";
@@ -20,6 +22,9 @@ int _tmain(int argc, _TCHAR* argv[])
 		received = "";
 		Client.ReceiveBytes(received, MESSAGE_DELIMITER);
 		std::cout << received << std::endl;
+		//Client.SendBytes(Message (MessageType::LOGOUT, User(temp, "IP"), User(), Group(), "zawartoœæ wiadomoœci").ToString(), MESSAGE_DELIMITER);
+		std::cin >>received;
+		Client.SendBytes(Message (MessageType::GROUPMESSAGE, User(temp, "IP"), User(), g1, "zawartoœæ wiadomoœci").ToString(), MESSAGE_DELIMITER);
 		
 	}
 	return 0;
