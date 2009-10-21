@@ -21,19 +21,19 @@ void Tests(){
 		//g2.Parse(g1.ToString());
 		//std::cout << g2.ToString()<< std::endl;
 		User sender("send", "ipsend");
-		Message m1 (MessageType::MESSAGE, sender, g1, "zawartoœæ wiadomoœci");
+		Message m1 (MessageType::MESSAGE, sender, u1, g1, "zawartoœæ wiadomoœci");
 		std::cout << m1.ToString() << std::endl;
 		Message m2;
 		m2.Parse(m1.ToString());
 		std::cout << m2.ToString() << std::endl;
 
-		Message m3 (MessageType::LOGIN, sender, g1, "zawartoœæ wiadomoœci");
+		Message m3 (MessageType::LOGIN, sender, u1, g1, "zawartoœæ wiadomoœci");
 		std::cout << m3.ToString() << std::endl;
 		Message m4;
 		m4.Parse(m3.ToString());
 		std::cout << m4.ToString() << std::endl;
 
-		Message m5 (MessageType::RESULT, sender, g1, "zawartoœæ wiadomoœci");
+		Message m5 (MessageType::RESULT, sender, u1, g1, "zawartoœæ wiadomoœci");
 		m5.PreviousOperation = MessageType::LOGIN;
 		m5.PreviousResult = Result::OK;
 		m5.PreviusOperationInfo = "info";
@@ -43,7 +43,7 @@ void Tests(){
 		std::cout << m6.ToString() << std::endl;
 
 
-		Message m7 (MessageType::USERLIST, sender, g1, "zawartoœæ wiadomoœci");
+		Message m7 (MessageType::USERLIST, sender, u1, g1, "zawartoœæ wiadomoœci");
 		std::cout << m7.ToString() << std::endl;
 		Message m8;
 		m8.Parse(m7.ToString());
@@ -63,7 +63,7 @@ int _tmain(int argc, _TCHAR* argv[]){
 	std::string temp;
 	
 	std::map<std::string, Socket *> x;
-	Socket * SS = new ClientSocket("localhost", 1986);
+	//Socket * SS = new ClientSocket("localhost", 1986);
 
 	while (1) {
 		

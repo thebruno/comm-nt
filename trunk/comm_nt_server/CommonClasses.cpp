@@ -162,8 +162,8 @@ bool Group::operator==(const Group &g) const {
 
 
 
-Message::Message(MessageType type, User involvedUser, Group involvedGroup, std::string text):
-	Type(type), InvolvedUser(involvedUser), InvolvedGroup(involvedGroup), Text(text){
+Message::Message(MessageType type, User sender, User receiver, Group involvedGroup, std::string text):
+	Type(type), Sender(sender), Receiver(receiver), InvolvedGroup(involvedGroup), Text(text){
 		PreviousOperation = MessageType::MESSAGETYPE_NOTSET;
 		PreviousResult = Result::RESULT_NOTSET;
 }
@@ -180,10 +180,12 @@ std::string Message::ToString(){
 	switch (Type){
 		case MessageType::LOGIN: 
 		case MessageType::LOGOUT: {
-			toReturn.append(InvolvedUser.ToString());		
+			toReturn.append(Sender.ToString());		
 			break;
 		}
 		case MessageType::RESULT: {
+			toReturn.append(Receiver.ToString());
+			toReturn += MESSAGE_SEPARATOR;
 			toReturn.append(::ToString(PreviousOperation));
 			toReturn += MESSAGE_SEPARATOR;
 			toReturn.append(::ToString(PreviousResult));
@@ -192,14 +194,23 @@ std::string Message::ToString(){
 			break;
 		}
 		case MessageType::USERLIST: {
-			toReturn.append(InvolvedUser.ToString());
+			toReturn.append(Receiver.ToString());
 			toReturn += MESSAGE_SEPARATOR;
 			toReturn.append(InvolvedGroup.ToString());
 			break;
 		}
-		case MessageType::MESSAGE:
+		case MessageType::MESSAGE: {
+			toReturn.append(Sender.ToString());
+			toReturn += MESSAGE_SEPARATOR;
+			toReturn.append(Receiver.ToString());
+			toReturn += MESSAGE_SEPARATOR;
+			toReturn.append(Text);
+			break;
+		}
 		case MessageType::GROUPMESSAGE: {
-			toReturn.append(InvolvedUser.ToString());
+			toReturn.append(Sender.ToString());
+			toReturn += MESSAGE_SEPARATOR;
+			toReturn.append(Receiver.ToString());
 			toReturn += MESSAGE_SEPARATOR;
 			toReturn.append(InvolvedGroup.ToString());
 			toReturn += MESSAGE_SEPARATOR;
@@ -226,32 +237,41 @@ Result Message::Parse(std::string &s){
 		case MessageType::LOGIN:		
 		case MessageType::LOGOUT: {
 			if (splitFields.size() != 2 || 
-				(InvolvedUser.Parse(splitFields[1]) != Result::OK)) 
+				(Sender.Parse(splitFields[1]) != Result::OK)) 
 					return Result::FAILED;
 			break;
 		}
 		case MessageType::RESULT: {
-			if (splitFields.size() != 4 || 				
-				(PreviousOperation = ToMessageType(splitFields[1])) == MessageType::MESSAGETYPE_NOTSET ||
-				(PreviousResult = ToResult(splitFields[2])) == Result::RESULT_NOTSET )				
+			if (splitFields.size() != 5 || 				
+				(Receiver.Parse(splitFields[1]) != Result::OK) ||
+				(PreviousOperation = ToMessageType(splitFields[2])) == MessageType::MESSAGETYPE_NOTSET ||
+				(PreviousResult = ToResult(splitFields[3])) == Result::RESULT_NOTSET )				
 				return Result::FAILED;
-			PreviusOperationInfo = splitFields[3];				
+			PreviusOperationInfo = splitFields[4];				
 			break;
 		}
 		case MessageType::USERLIST: {
 			if (splitFields.size() != 3 || 
-				(InvolvedUser.Parse(splitFields[1]) != Result::OK) ||
+				(Receiver.Parse(splitFields[1]) != Result::OK) ||
 				(InvolvedGroup.Parse(splitFields[2]) != Result::OK)) 
 					return Result::FAILED;
 			break;
 		}
-		case MessageType::MESSAGE:
-		case MessageType::GROUPMESSAGE: {
+		case MessageType::MESSAGE: {
 			if (splitFields.size() != 4 || 
-				(InvolvedUser.Parse(splitFields[1]) != Result::OK) ||
-				(InvolvedGroup.Parse(splitFields[2]) != Result::OK)) 
+				(Sender.Parse(splitFields[1]) != Result::OK) ||
+				(Receiver.Parse(splitFields[2]) != Result::OK)) 
 					return Result::FAILED;
 				Text = splitFields[3];
+			break;
+		}
+		case MessageType::GROUPMESSAGE: {
+			if (splitFields.size() != 5 || 
+				(Sender.Parse(splitFields[1]) != Result::OK) ||
+				(Receiver.Parse(splitFields[2]) != Result::OK) ||
+				(InvolvedGroup.Parse(splitFields[3]) != Result::OK)) 
+					return Result::FAILED;
+				Text = splitFields[4];
 			break;
 		}
 		default:
