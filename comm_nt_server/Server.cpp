@@ -4,13 +4,14 @@
 
 
 Server::Server(int port, int maxConnections, bool start ) {
-	Started = start;
+	Started = false;
 	Port = port;
 	MaxConnections = maxConnections;
 	if (start)
 		Start();
 }
 Server::~Server(){
+	Stop();
 	delete NewMessage;
 	delete InputMsgsAccess;
 	delete OutputMsgsAccess;
@@ -58,32 +59,25 @@ void Server::DoReceiving(Socket *userSocket){
 	Socket const * const constUserSocket = static_cast<Socket const * const>(userSocket);
 	User u;
 	Message m;
-	std::string received = "";
 	bool cont = true;
 	// pobranie informacji od klienta, trzeba to zrobiæ tutaj, ¿eby odrzuciæ po³¹czenie jeœli user istnieje
 	// wiadomoœæ trzeba wrzuciæ do skrzynki odbiorczej, ¿eby poinformowaæ resztê
-	Result result = userSocket->ReceiveBytes(received, MESSAGE_DELIMITER);
-	if (result != Result::OK ) {
-		std::cout << "Cannot read from socket." << std::endl;
-		return ;
-	}
-	if (m.Parse(received) != Result::OK){
-		std::cout << "Cannot parse first message." << std::endl;
-		return ;
-	}
+	Result result = Receive(m, userSocket);
+	if (result != Result::OK)
+		return;
 	u = m.Sender;
-	received.clear();
 	DataAccess->Wait();
 	if (m.Type == MessageType::LOGIN){
-		if (IsUserLogged(u) == false) {
+		if (IsUserLogged(u) == true) {
 			//TODO: odes³aæ, ¿e login zajêty
 			std::cout << "Login not available! " << std::endl;
+		} else {
+			AddUser(u, userSocket);
+			InputMsgsAccess->Wait();
+			InputMsgs.push_back(m);
+			InputMsgsAccess->Release();
+			std::cout << "User: " << u.ToString() << " has logged in." << std::endl;
 		}
-		AddUser(u, userSocket);
-		InputMsgsAccess->Wait();
-		InputMsgs.push_back(m);
-		InputMsgsAccess->Release();
-		std::cout << "User: " << u.ToString() << " has logged in." << std::endl;
 	} else {
 		std::cout << "Wrong message type." << std::endl;
 		//TODO: b³êdny komunikat
@@ -92,23 +86,17 @@ void Server::DoReceiving(Socket *userSocket){
 	
 	if (!cont)
 		return;
+	NewMessage->Release();
 	while (1){			
 		if (SelectSocket::CanRead(constUserSocket, true)) {
-			received.clear();
 			m = Message();
-			Result result = userSocket->ReceiveBytes(received, MESSAGE_DELIMITER);
-			if (result != Result::OK) {
-				std::cout << "Cannot read data from socket." << std::endl;
+
+			Result result = Receive(m, userSocket);		
+			if (result != Result::OK)
 				break;
-			}		
-			result = m.Parse(received);
-			if (result != Result::OK){
-				std::cout << "Parsing error." << std::endl;
-				break;
-			}
 			std::cout << "Received: " << m.ToString() << " from user: " << u.ToString() << std::endl;
 
-			DataAccess->Wait();
+			//DataAccess->Wait();
 
 			//TODO: czy wysy³aj¹æ userowi lisetê u¿ytkowników, umieszczaæ go tam?
 			// raczej tak, ale jeœli from to ten sam user - nie wyœwietlaj u usera
@@ -116,18 +104,27 @@ void Server::DoReceiving(Socket *userSocket){
 			InputMsgs.push_back(m);
 			InputMsgsAccess->Release();
 			NewMessage->Release();
-			DataAccess->Release();
+			//DataAccess->Release();
+			if (m.Type == MessageType::LOGOUT)
+				return;
 		}
 	}
 	DataAccess->Wait();
-		RemoveUser(u);
-		std::cout << "User: " << u.ToString() << " disconnected or has been remeved due to error(s)." << std::endl;
+	RemoveUser(u);
+	std::cout << "User: " << u.ToString() << " disconnected or has been remeved due to error(s)." << std::endl;
 	DataAccess->Release();
+	// emulowanie roz³¹czenia tak jakby user przys³a³, ¿e siê roz³¹czy³
+	InputMsgsAccess->Wait();	
+	InputMsgs.push_back(Message(MessageType::LOGOUT, u, User(), Group(), ""));
+	InputMsgsAccess->Release();
+	NewMessage->Release();
+	return;
 }
 
 //void Server::DoSending(){}
 
 void Server::DoHandling(){
+	std::list<User>::iterator uIt;
 	while(1){
 		NewMessage->Wait();
 		InputMsgsAccess->Wait();
@@ -142,9 +139,9 @@ void Server::DoHandling(){
 			// user ju¿ dodany przy odborze
 			MapThreadToUser(m.Sender);
 			//OutputMsgsAccess->Wait();
-			std::list<User>::iterator it;
-			for (it = Users.begin(); it != Users.end(); ++it) {
-				Message newMessage = Message(MessageType::USERLIST, *it, Group(Users), "");
+
+			for (uIt = Users.begin(); uIt != Users.end(); ++uIt) {
+				Message newMessage = Message(MessageType::USERLIST, User(), *uIt, Group(Users), "");
 				this->Send(newMessage);
 				//OutputMsgs.push_back(newMessage);
 			}
@@ -154,9 +151,14 @@ void Server::DoHandling(){
 			break;
 		}
 		case MessageType::LOGOUT: {
-			// usun¹æ usera
-			// usun¹æ jego w¹tek
+			// Usuwanie usera zrobione w w¹tku usera
+			// usuwanie w¹tku usera w DoHandling
 			//rozes³aæ info do reszty
+			for (uIt = Users.begin(); uIt != Users.end(); ++uIt) {
+				Message newMessage = Message(MessageType::USERLIST, User(), *uIt, Group(Users), "");
+				this->Send(newMessage);
+				//OutputMsgs.push_back(newMessage);
+			}
 			break;
 		}
 		case MessageType::RESULT: {
@@ -179,6 +181,7 @@ void Server::DoHandling(){
 		}
 		// sprawdziæ timeouty
 		SendMessages();
+		DeleteNotUsedThreads();
 		DataAccess->Release();
 	}
 }
@@ -187,34 +190,26 @@ void Server::DoHandling(){
 Result Server::SendMessages(){
 	return Result::OK;
 }
-
+// sprawdzanie b³êdów? try/catch?
 Result Server::Send(Message& m){
-	switch (m.Type) {
-		case MessageType::LOGIN: {	
-			break;
-		}
-		case MessageType::LOGOUT: {		
-			break;
-		}
-		case MessageType::RESULT: {			
-			break;
-		}
-		case MessageType::USERLIST: {		
-			return Sockets[m.InvolvedUser.ToString()]->SendBytes(m.ToString(), MESSAGE_DELIMITER);
-		}
-		case MessageType::MESSAGE: {	
-			break;
-		}
-		case MessageType::GROUPMESSAGE: {	
-			return Sockets[m.InvolvedGroup.GroupMembers.front().ToString()]->SendBytes(m.ToString(), MESSAGE_DELIMITER);
-		}
-		default:
-			break;
-	}
+	return Sockets[m.Receiver.ToString()]->SendBytes(m.ToString(), MESSAGE_DELIMITER);
 }
 
-Result Receive(Message &m){
+Result Server::Receive(Message &m, Socket * userSocket){
+	std::string received;
+	Result result = userSocket->ReceiveBytes(received, MESSAGE_DELIMITER);
+	if (result != Result::OK ) {
+		std::cout << "Cannot read from socket." << std::endl;
+		return Result::FAILED;
+	}
+	if (m.Parse(received) != Result::OK){
+		std::cout << "Cannot parse message." << std::endl;
+		return Result::FAILED;
+	}
 	return Result::OK;
+}
+Result Server::Receive(Message &m){
+	return this->Receive(m, Sockets[m.Sender.ToString()]);
 }
 
 void Server::Start(){ 
@@ -300,16 +295,33 @@ void Server::AddGroup(Group &g){
 	Groups.push_back(g);
 }
 // use semaphores!
+// remove user with thread
+// it is called from receiver thread, so we just want to delete it from map
+// it will finish a moment later
 void Server::RemoveUser(User &u){
 	Users.remove(u);
 	std::map<std::string, Socket *>::iterator it;
 	std::string key = u.ToString();
 	for(it=Sockets.begin(); it !=Sockets.end(); )
 	{
-		if(it->first == key)
+		if(it->first == key) {
+			delete it->second;
 			Sockets.erase(it++);
+		}
 		else
 			++it;
+	}	
+	SysThread * toDelete;
+	std::map<std::string, SysThread*>::iterator mit;
+	for(mit=ReceiverThreads.begin(); mit !=ReceiverThreads.end(); )
+	{
+		if(mit->first == key) {
+			toDelete = mit->second;
+			ThreadsToDelete.push_back(toDelete);
+			ReceiverThreads.erase(mit++);
+		}
+		else
+			++mit;	
 	}
 }
 // use semaphores!
@@ -317,6 +329,15 @@ void Server::RemoveGroup(Group &g){
 	Groups.remove(g);
 }
 
+void Server::DeleteNotUsedThreads(){
+	std::list<SysThread *>::iterator i;
+	for(i = ThreadsToDelete.begin(); i != ThreadsToDelete.end(); i++)
+	{
+		(*i)->Terminate();
+		delete *i;
+	}
+	ThreadsToDelete.clear();
+}
 
 //switch (Type){
 //	case MessageType::LOGIN: {	

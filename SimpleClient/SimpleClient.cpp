@@ -9,10 +9,18 @@ int _tmain(int argc, _TCHAR* argv[])
 	User u2("login2","ip2");
 	Group g1;
 	g1.GroupMembers.push_back(u2);
+
+	std::string temp = "";
+	std::string received = "";
+	std::cout << "login: ";
+	std::cin >> temp;
+	std::cout << std::endl;
+	Client.SendBytes(Message (MessageType::LOGIN, User(temp, "IP"), User(), Group(), "zawartoœæ wiadomoœci").ToString(), MESSAGE_DELIMITER);
 	while(1){
-		int temp = 0;
-		Client.SendBytes(Message (MessageType::LOGIN, User("login", "IP"), g1, "zawartoœæ wiadomoœci").ToString());
-		std::cin >> temp;
+		received = "";
+		Client.ReceiveBytes(received, MESSAGE_DELIMITER);
+		std::cout << received << std::endl;
+		
 	}
 	return 0;
 }

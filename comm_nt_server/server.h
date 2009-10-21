@@ -41,6 +41,8 @@ private:
 	std::map <Socket *, SysThread *> UnverifiedReceiverThreads;
 	//SysThread *SenderThread;
 	SysThread *HandlerThread;
+	std::list<SysThread*> ThreadsToDelete;
+	void DeleteNotUsedThreads();
 	void HandleMessage(Message* message);
 
 	//methods - not used if static is enough
@@ -59,6 +61,7 @@ public:
 	Result SendMessages();
 	Result Send(Message& m);
 	Result Receive(Message &m);
+	Result Receive(Message &m, Socket * userSocket);
 	//threads body
 	void DoListening();
 	void DoReceiving(Socket * userSocket);

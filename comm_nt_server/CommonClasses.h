@@ -25,12 +25,12 @@ enum MessageType
 	// % - MESSAGE_GROUP_USER_SEPARATOR
 	// $ - MESSAGE_USER_SEPARATOR
 	MESSAGETYPE_NOTSET,
-	LOGIN, // add user to list on server, c->s, |LOGIN#USER| ==> |LOGIN#LOGIN$IP| 
-	LOGOUT, // disconnectiong from server, c->s, |LOGOUT#USER|
-	RESULT, // result of performed operation, s->c, |RESULT#OPERATION#OPERATION RESULT#ADDITIONAL INFO|
-	USERLIST, // list of users, s->c, |USERLIST#TO USER#USERS GROUP#| ==> |USERLIST#TO USER#USER1%USER2%...%USERN|
-	MESSAGE, // simple text message, c->s->c, |MESSAGE#FROM USER#TO USER|
-	GROUPMESSAGE, // simple text message for group of recipients, c->s->c1, c2, c3, |MESSAGE#FROM USER#USERS GROUP|
+	LOGIN, // add user to list on server, c->s, |LOGIN#SENDER| ==> |LOGIN#LOGIN$IP|
+	LOGOUT, // disconnectiong from server, c->s, |LOGOUT#SENDER|
+	RESULT, // result of performed operation, s->c, |RESULT#RECEIVER#OPERATION#OPERATION RESULT#ADDITIONAL INFO|
+	USERLIST, // list of users, s->c, |USERLIST#RECEIVER#USERS GROUP#| ==> |USERLIST#TO USER#USER1%USER2%...%USERN|, TO U
+	MESSAGE, // simple text message, c->s->c, |MESSAGE#SENDER#RECEIVER|
+	GROUPMESSAGE, // simple text message for group of recipients, c->s->c1, c2, c3, |MESSAGE#SENDER#RECEIVER#USERS GROUP|
 };
 
 std::string ToString(MessageType command);
@@ -73,7 +73,7 @@ struct Message: public Serializable {
 	User Receiver;
 	Group InvolvedGroup; // sometimes usergroup, sometimes receivers
 	std::string Text;
-	Message(MessageType type, User involvedUser, Group involvedGroup, std::string text);
+	Message(MessageType type, User sender, User receiver, Group involvedGroup, std::string text);
 	Message();
 	virtual std::string ToString();
 	virtual Result Parse(std::string &object);
