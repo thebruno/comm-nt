@@ -111,7 +111,7 @@ void Server::DoReceiving(Socket *userSocket){
 	}
 	DataAccess->Wait();
 	RemoveUser(u);
-	std::cout << "User: " << u.ToString() << " disconnected or has been remeved due to error(s)." << std::endl;
+	std::cout << "User: " << u.ToString() << " disconnected or has been remved due to error(s)." << std::endl;
 	DataAccess->Release();
 	// emulowanie roz³¹czenia tak jakby user przys³a³, ¿e siê roz³¹czy³
 	InputMsgsAccess->Wait();	
@@ -173,7 +173,14 @@ void Server::DoHandling(){
 			break;
 		}
 		case MessageType::GROUPMESSAGE: {
-			// pass it to user group
+			for (uIt = m.InvolvedGroup.GroupMembers.begin(); uIt != m.InvolvedGroup.GroupMembers.end(); ++uIt) {
+				// don't send back to sender
+				if (!(*uIt == m.Sender)) {
+					m.Receiver = *uIt;
+					this->Send(m);
+				}
+				//OutputMsgs.push_back(newMessage);
+			}
 			break;
 		}
 		default:

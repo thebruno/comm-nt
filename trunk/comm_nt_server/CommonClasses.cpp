@@ -210,8 +210,8 @@ std::string Message::ToString(){
 		case MessageType::GROUPMESSAGE: {
 			toReturn.append(Sender.ToString());
 			toReturn += MESSAGE_SEPARATOR;
-			toReturn.append(Receiver.ToString());
-			toReturn += MESSAGE_SEPARATOR;
+			//toReturn.append(Receiver.ToString());
+			//toReturn += MESSAGE_SEPARATOR;
 			toReturn.append(InvolvedGroup.ToString());
 			toReturn += MESSAGE_SEPARATOR;
 			toReturn.append(Text);
@@ -266,12 +266,13 @@ Result Message::Parse(std::string &s){
 			break;
 		}
 		case MessageType::GROUPMESSAGE: {
-			if (splitFields.size() != 5 || 
+			if (splitFields.size() != 4 || 
 				(Sender.Parse(splitFields[1]) != Result::OK) ||
-				(Receiver.Parse(splitFields[2]) != Result::OK) ||
-				(InvolvedGroup.Parse(splitFields[3]) != Result::OK)) 
+				// omit receiver field - it is used only on server
+				//(Receiver.Parse(splitFields[2]) != Result::OK) ||
+				(InvolvedGroup.Parse(splitFields[2]) != Result::OK)) 
 					return Result::FAILED;
-				Text = splitFields[4];
+				Text = splitFields[3];
 			break;
 		}
 		default:
