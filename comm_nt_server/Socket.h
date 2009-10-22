@@ -3,6 +3,7 @@
 #include "stdafx.h"
 #include "Utilities.h"
 
+// class for socket errors
 class SocketException : public std::exception {
 public:
 	std::string Message;
@@ -10,7 +11,6 @@ public:
 		Message.assign(msg);
 	}
 };
-
 
 class Socket{
 private:

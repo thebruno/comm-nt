@@ -57,18 +57,42 @@ void Tests(){
 
 
 int _tmain(int argc, _TCHAR* argv[]){
-	Server * s = new Server(1986, 10);
-	std::cout << GetHostName("localhost") << std::endl;
-	//ServerSocket in(2000,5);
-	std::string temp;
-	
-	std::map<std::string, Socket *> x;
-	//Socket * SS = new ClientSocket("localhost", 1986);
-
-	while (1) {
+	int port = 1986;
+	int maxConnections = 255;
+	std::cout << "Welcome to Simple Windows Communicator Server\nAuthor: Konrad Balys, OS2" << std::endl<< std::endl;
+	std::cout << "Starting server..." << std::endl;
+	try{
+		Server * s = new Server(port, maxConnections);
+		std::cout << "Server started at address:"  << GetHostName("localhost") << ", port: "<< port << ", max connections: " << maxConnections << std::endl;
+		std::cout << "\nAvailable commands:\nq - stop and quit server\nstart - start server\nstop - stop server\nusers - print currently logged users\n" <<std::endl;
 		
+		std::string temp;
+		
+		std::map<std::string, Socket *> x;
+		//Socket * SS = new ClientSocket("localhost", 1986);
 
-		//_beginthreadex(0, 0, Connection, (void*) s, 0, &ret);
+		while (1) {
+			temp = "";
+			std::cin >> temp;
+			if (temp == "q") {
+				delete s;
+				break;
+			} else if (temp == "start"){
+				s->Start();
+			} else if (temp == "stop") {
+				s->Stop();
+			} else if (temp == "users") {
+				std::cout << s->PrintUsers();
+			}
+			else {
+				std::cout << "Unrecognized command. Please try again" << std::endl;
+			}
+
+			//_beginthreadex(0, 0, Connection, (void*) s, 0, &ret);
+		}
+		std::cout << "Closing server..." << std::endl;
+	} catch (std::exception ex){
+		std::cout << "Error occured: "<< ex.what()<< std::endl;
 	}
   
   return 0;
