@@ -160,8 +160,8 @@ bool Group::operator==(const Group &g) const {
 	return true;
 }
 
-Message::Message(MessageType type, MessageType previousOperation, Result previousResult, std::string previusOperationInfo):
-	Type(type), PreviousOperation(previousOperation), PreviousResult(previousResult), PreviusOperationInfo(previusOperationInfo) {
+Message::Message(MessageType type, User receiver, MessageType previousOperation, Result previousResult, std::string previusOperationInfo):
+	Type(type), Receiver(receiver), PreviousOperation(previousOperation), PreviousResult(previousResult), PreviusOperationInfo(previusOperationInfo) {
 }
 
 Message::Message(MessageType type, User sender, User receiver, Group involvedGroup, std::string text):

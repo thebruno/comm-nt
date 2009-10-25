@@ -3,6 +3,7 @@
 
 #include <QtGui/QMainWindow>
 #include <userchat.h>
+#include "ReceiverThread.h"
 
 namespace Ui
 {
@@ -19,8 +20,11 @@ public:
 
     UserChat * u;
     Ui::MainWindow *ui;
+public slots:
+    void ReceivedMessage(const QString & msg);
 private:
 
+    ReceiverThread thread;
 private slots:
     void on_pushButton_clicked();
     void on_pushButton_2_clicked();

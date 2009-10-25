@@ -14,23 +14,28 @@ int _tmain(int argc, _TCHAR* argv[])
 	while (1) {
 		received = "";
 		getline(std::cin, toSend);
+		std::vector<std::string> temp = split(toSend,' ');
 		if (toSend.size() > 1) {
 			if (toSend[0] == 'l') {
-				std::cout << "Login: " << toSend.substr(2, toSend.size() - 2) << std::endl;
-				client->LogIn(toSend.substr(2, toSend.size() - 2));
+				std::cout << "Login: " << temp[1] << std::endl;
+				client->LogIn(temp[1]);
 			}
 			if (toSend[0] == 'o') {
 				std::cout << "logout" << std::endl;
 			}
 			if (toSend[0] == 'm') {
-				client->SendToUser(User(toSend.substr(2, toSend.size() - 2), "BrunoPC"), toSend.substr(5, toSend.size() - 5));
+				client->SendToUser(User(temp[1], "BrunoPC"), temp[2]);
 				std::cout << "message" << std::endl;
 			}
 			if (toSend[0] == 'g') {
 				std::cout << "group" << std::endl;
+				Group g;
+				for (int i = 1; i <= temp.size() - 2; i ++)
+					g.GroupMembers.push_back(User(temp[i], "BrunoPC"));
+				client->SendToGroup(g, temp[temp.size() - 1]);
 			}
-			if (toSend[0] == 'g') {
-				//std::cout << client->PrintUsers() << std::endl;
+			if (toSend[0] == 'u') {
+				std::cout << client->PrintUsers() << std::endl;
 			}
 		}
 	}

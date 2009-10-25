@@ -74,7 +74,7 @@ struct Message: public Serializable {
 	Group InvolvedGroup;
 	std::string Text;
 	Message(MessageType type, User sender, User receiver, Group involvedGroup, std::string text);
-	Message(MessageType type, MessageType previousOperation, Result previousResult, std::string previusOperationInfo);
+	Message(MessageType type, User receiver, MessageType previousOperation, Result previousResult, std::string previusOperationInfo);
 	Message();
 	virtual std::string ToString();
 	virtual Result Parse(std::string &object);
