@@ -12,10 +12,6 @@ Server::Server(int port, int maxConnections, bool start ) {
 
 Server::~Server(){
 	Stop();
-	delete NewMessage;
-	delete InputMsgsAccess;
-	delete OutputMsgsAccess;
-	delete DataAccess;
 }
 
 unsigned long __stdcall Server::ListenerFunction(void*s){
@@ -101,7 +97,6 @@ void Server::DoReceiving(Socket *userSocket){
 			InputMsgs.push_back(m);
 			InputMsgsAccess->Release();
 			NewMessage->Release();
-			//DataAccess->Release();
 			if (m.Type == MessageType::LOGOUT)
 				return;
 		}
@@ -139,6 +134,7 @@ void Server::DoHandling(){
 				Message newMessage = Message(MessageType::USERLIST, User(), *uIt, Group(Users), "");
 				this->Send(newMessage);
 			}
+			//TODO: odes³aœ wynik logowania 
 			break;
 		}
 		case MessageType::LOGOUT: {
@@ -257,6 +253,10 @@ void Server::Stop(){
 		delete HandlerThread;
 
 		DeleteNotUsedThreads();
+		delete NewMessage;
+		delete InputMsgsAccess;
+		delete OutputMsgsAccess;
+		delete DataAccess;
 	}
 }
 

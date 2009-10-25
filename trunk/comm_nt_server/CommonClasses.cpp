@@ -171,9 +171,8 @@ Message::Message(MessageType type, User sender, User receiver, Group involvedGro
 }
 
 
-Message::Message(){
-	PreviousOperation = MessageType::MESSAGETYPE_NOTSET;
-	PreviousResult = Result::RESULT_NOTSET;
+	Message::Message():Type(MessageType::MESSAGETYPE_NOTSET), PreviousOperation (MessageType::MESSAGETYPE_NOTSET),
+		PreviousResult (Result::RESULT_NOTSET){
 }
 
 std::string Message::ToString(){

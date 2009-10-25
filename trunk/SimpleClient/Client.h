@@ -6,7 +6,12 @@
 #include "Socket.h"
 
 class Client {
-	Socket * Socket;
+	std::string Host;
+	int Port;
+	// clients IP/name
+	std::string IP;
+	//Communication Socket
+	Socket * CommSocket;
 	User Me;
 	std::list<User> Users;
 	std::list<Group> Groups;
@@ -17,17 +22,18 @@ class Client {
 
 	SysThread * ReceiverThread;
 	SysThread * SenderThread;
+	SysThread * HandlerThread;
 
 	SysSemaphore * DataAccess;
 	SysSemaphore * InputMsgsAccess;
 	SysSemaphore * OutputMsgsAccess;
-	SysSemaphore * InputMsgsHistoryAccess;
-	SysSemaphore * OutputMsgsHistoryAccess;
+	//SysSemaphore * InputMsgsHistoryAccess;
+	//SysSemaphore * OutputMsgsHistoryAccess;
 
 	SysSemaphore * NewInputMessage;
 	SysSemaphore * NewOutputMessage;
-	bool Connected;
-	bool Logged;
+	bool IsLogged;
+	bool IsConnected;
 
 	// sender thread api funtion
 	static unsigned long __stdcall SenderFunction(void *c);
@@ -41,17 +47,25 @@ public:
 
 	Client();
 	~Client();
-	Client(std::string host, int port);
+	Client(std::string host, int port, bool connect = false);
 
-	Result LogIn(User u);
+	Result Connect(std::string host, int port);
+	Result Disconnect();
+
+	Result LogIn(std::string login);
 	Result LogOut();
 
 	Result Send(Message & m);
+	void SendAsynchronously(Message & m);
 	Result Receive(Message &m);
+	void SendToUser(User recipient, std::string text);
+	void SendToGroup(Group g, std::string text);
 
 	void DoHandling();
 	void DoReceiving();
 	void DoSending();
+	std::string PrintUsers();
+
 };
 
 #endif
