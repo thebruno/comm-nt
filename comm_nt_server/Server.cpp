@@ -64,7 +64,7 @@ void Server::DoReceiving(Socket *userSocket){
 			// sand back that user have to put different login
 			std::string info;
 			info.append("Login: ").append(m.Sender.Login).append(" is not available. Please choose different login.");
-			Message temp (MessageType::RESULT, MessageType::LOGIN, Result::FAILED, info) ;			
+			Message temp (MessageType::RESULT, User(), MessageType::LOGIN, Result::FAILED, info) ;			
 			this->Send(temp, userSocket);
 			delete userSocket;
 			return;
@@ -129,12 +129,14 @@ void Server::DoHandling(){
 		case MessageType::LOGIN: {
 			// user has already been added, map his/her thread only
 			MapThreadToUser(m.Sender);
+			Message newMessage;
 			// send all users list to all users
 			for (uIt = Users.begin(); uIt != Users.end(); ++uIt) {
-				Message newMessage = Message(MessageType::USERLIST, User(), *uIt, Group(Users), "");
+				newMessage = Message(MessageType::USERLIST, User(), *uIt, Group(Users), "");
 				this->Send(newMessage);
 			}
-			//TODO: odes³aœ wynik logowania 
+			newMessage = Message(MessageType::RESULT, m.Sender, MessageType::LOGIN, Result::OK, "You have logged in successfully");
+			this->Send(newMessage);
 			break;
 		}
 		case MessageType::LOGOUT: {
@@ -168,7 +170,7 @@ void Server::DoHandling(){
 			// send to all users (without sender)
 			for (uIt = m.InvolvedGroup.GroupMembers.begin(); uIt != m.InvolvedGroup.GroupMembers.end(); ++uIt) {
 				// don't send back to sender
-				if (!(*uIt == m.Sender)) {
+				if (!(*uIt == m.Sender) && IsUserLogged(*uIt)) {
 					m.Receiver = *uIt;
 					this->Send(m);
 				}
@@ -269,11 +271,10 @@ bool Server::IsUserLogged(User &u) {
 }
 
 bool Server::IsGroupCreated(Group &g) {
-	DataAccess->Wait();
 	std::list<Group>::iterator it;
 	for (it = Groups.begin(); it != Groups.end(); it++)
-		if (*it == g)
-			return true;
+		if (*it == g) 
+			return true;					
 	return false;
 }
 
