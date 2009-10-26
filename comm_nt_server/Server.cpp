@@ -52,11 +52,11 @@ void Server::DoReceiving(Socket *userSocket){
 	// get first data from client, drop user if there is another user with the same login and ip
 	// if ok - add user
 	Result result = Receive(m, userSocket);
-	if (result != Result::OK)
+	if (result != OK)
 		return;
 	u = m.Sender;
 	DataAccess->Wait();
-	if (m.Type == MessageType::LOGIN){
+	if (m.Type == LOGIN){
 		if (IsUserLogged(u) == true) {
 			DataAccess->Release();
 			// login not available, send fail
@@ -64,7 +64,7 @@ void Server::DoReceiving(Socket *userSocket){
 			// sand back that user have to put different login
 			std::string info;
 			info.append("Login: ").append(m.Sender.Login).append(" is not available. Please choose different login.");
-			Message temp (MessageType::RESULT, User(), MessageType::LOGIN, Result::FAILED, info) ;			
+			Message temp (RESULT, User(), LOGIN, FAILED, info) ;			
 			this->Send(temp, userSocket);
 			delete userSocket;
 			return;
@@ -90,14 +90,14 @@ void Server::DoReceiving(Socket *userSocket){
 		if (SelectSocket::CanRead(constUserSocket, true)) {
 			m = Message();
 			Result result = Receive(m, userSocket);		
-			if (result != Result::OK)
+			if (result != OK)
 				break;
 			std::cout << "Received: " << m.ToString() << " from user: " << u.ToString() << std::endl;
 			InputMsgsAccess->Wait();
 			InputMsgs.push_back(m);
 			InputMsgsAccess->Release();
 			NewMessage->Release();
-			if (m.Type == MessageType::LOGOUT)
+			if (m.Type == LOGOUT)
 				return;
 		}
 	}
@@ -108,7 +108,7 @@ void Server::DoReceiving(Socket *userSocket){
 	DataAccess->Release();
 	// emulowanie roz³¹czenia tak jakby user przys³a³, ¿e siê roz³¹czy³
 	InputMsgsAccess->Wait();	
-	InputMsgs.push_back(Message(MessageType::LOGOUT, u, User(), Group(), ""));
+	InputMsgs.push_back(Message(LOGOUT, u, User(), Group(), ""));
 	InputMsgsAccess->Release();
 	NewMessage->Release();
 	return;
@@ -126,44 +126,44 @@ void Server::DoHandling(){
 		DataAccess->Wait();
 		// handle
 		switch (m.Type) {
-		case MessageType::LOGIN: {
+		case LOGIN: {
 			// user has already been added, map his/her thread only
 			MapThreadToUser(m.Sender);
 			Message newMessage;
 			// send all users list to all users
 			for (uIt = Users.begin(); uIt != Users.end(); ++uIt) {
-				newMessage = Message(MessageType::USERLIST, User(), *uIt, Group(Users), "");
+				newMessage = Message(USERLIST, User(), *uIt, Group(Users), "");
 				this->Send(newMessage);
 			}
-			newMessage = Message(MessageType::RESULT, m.Sender, MessageType::LOGIN, Result::OK, "You have logged in successfully");
+			newMessage = Message(RESULT, m.Sender, LOGIN, OK, "You have logged in successfully");
 			this->Send(newMessage);
 			break;
 		}
-		case MessageType::LOGOUT: {
+		case LOGOUT: {
 			// user has already been removed
 			// his/her thread will be removed soon
 			// send all users list
 			for (uIt = Users.begin(); uIt != Users.end(); ++uIt) {
-				Message newMessage = Message(MessageType::USERLIST, User(), *uIt, Group(Users), "");
+				Message newMessage = Message(USERLIST, User(), *uIt, Group(Users), "");
 				this->Send(newMessage);
 			}
 			break;
 		}
-		case MessageType::RESULT: {
+		case RESULT: {
 			// send it to user
 			this->Send(m);
 			break;
 		}
-		case MessageType::USERLIST: {
+		case USERLIST: {
 			// cannot occure at server side
 			break;
 		}
-		case MessageType::MESSAGE: {
+		case MESSAGE: {
 			// send it to user
 			this->Send(m);
 			break;
 		}
-		case MessageType::GROUPMESSAGE: {
+		case GROUPMESSAGE: {
 			// create group if it has not yet been created.
 			if (IsGroupCreated(m.InvolvedGroup) == false)
 				Groups.push_back(m.InvolvedGroup);
@@ -198,15 +198,15 @@ Result Server::Send(Message& m, Socket * userSocket){
 Result Server::Receive(Message &m, Socket * userSocket){
 	std::string received;
 	Result result = userSocket->ReceiveBytes(received, MESSAGE_DELIMITER);
-	if (result != Result::OK ) {
+	if (result != OK ) {
 		std::cout << "Cannot read from socket." << std::endl;
-		return Result::FAILED;
+		return FAILED;
 	}
-	if (m.Parse(received) != Result::OK){
+	if (m.Parse(received) != OK){
 		std::cout << "Cannot parse message." << std::endl;
-		return Result::FAILED;
+		return FAILED;
 	}
-	return Result::OK;
+	return OK;
 }
 Result Server::Receive(Message &m){
 	return this->Receive(m, Sockets[m.Sender.ToString()]);
@@ -357,22 +357,22 @@ std::string Server::PrintUsers() {
 }
 
 //switch (Type){
-//	case MessageType::LOGIN: {	
+//	case LOGIN: {	
 //		break;
 //	}
-//	case MessageType::LOGOUT: {		
+//	case LOGOUT: {		
 //		break;
 //	}
-//	case MessageType::RESULT: {			
+//	case RESULT: {			
 //		break;
 //	}
-//	case MessageType::USERLIST: {		
+//	case USERLIST: {		
 //		break;
 //	}
-//	case MessageType::MESSAGE: {	
+//	case MESSAGE: {	
 //		break;
 //	}
-//	case MessageType::GROUPMESSAGE: {	
+//	case GROUPMESSAGE: {	
 //		break;
 //	}
 //	default:

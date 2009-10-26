@@ -45,7 +45,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(&thread ,  SIGNAL(ReceivedMessage(const QString &)), this, SLOT(ReceivedMessage(const QString &)));
    // connect(&thread ,  SIGNAL(doit()), this, SLOT(doit()));
-
+    Communicator = new Client("localhost", 1986, true);
 }
 
 void MainWindow::ReceivedMessage(const QString & msg){
@@ -63,6 +63,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_2_clicked()
 {
+    Communicator->LogIn("Ania");
     //CreateThread(0, 0, MyThreadFunction, this ,0, 0);
 
     std::string qs = "ola";

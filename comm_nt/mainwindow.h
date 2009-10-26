@@ -4,6 +4,7 @@
 #include <QtGui/QMainWindow>
 #include <userchat.h>
 #include "ReceiverThread.h"
+#include "Client.h"
 
 namespace Ui
 {
@@ -23,7 +24,7 @@ public:
 public slots:
     void ReceivedMessage(const QString & msg);
 private:
-
+    Client * Communicator;
     ReceiverThread thread;
 private slots:
     void on_pushButton_clicked();

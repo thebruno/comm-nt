@@ -1,0 +1,16 @@
+INPUT(
+./release\main.o
+./release\mainwindow.o
+./release\userchat.o
+./release\ReceiverThread.o
+./release\Utilities.o
+./release\stdafx.o
+./release\Socket.o
+./release\CommonClasses.o
+./release\Client.o
+./release\loginform.o
+./release\moc_mainwindow.o
+./release\moc_userchat.o
+./release\moc_ReceiverThread.o
+./release\moc_loginform.o
+);
