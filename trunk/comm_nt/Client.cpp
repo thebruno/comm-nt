@@ -238,7 +238,8 @@ std::string Client::PrintUsers() {
 }
 
 void Client::SendToUser(User recipient, std::string text){
-	SendAsynchronously(Message(MESSAGE, Me, recipient, Group(), text));
+        Message m = Message(MESSAGE, Me, recipient, Group(), text);
+        SendAsynchronously(m);
 }
 
 void Client::SendToGroup(Group g, std::string text){

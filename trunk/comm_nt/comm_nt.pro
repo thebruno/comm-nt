@@ -6,9 +6,26 @@ TEMPLATE = app
 SOURCES += main.cpp \
     mainwindow.cpp \
     userchat.cpp \
-    ReceiverThread.cpp
+    ReceiverThread.cpp \
+    Utilities.cpp \
+    stdafx.cpp \
+    Socket.cpp \
+    CommonClasses.cpp \
+    Client.cpp \
+    loginform.cpp
 HEADERS += mainwindow.h \
     userchat.h \
-    ReceiverThread.h
+    ReceiverThread.h \
+    Utilities.h \
+    targetver.h \
+    stdafx.h \
+    Socket.h \
+    CommonClasses.h \
+    Client.h \
+    BasicSystemClasses.h \
+    loginform.h
 FORMS += mainwindow.ui \
-    userchat.ui
+    userchat.ui \
+    loginform.ui
+LIBS += -L/ \
+    -lWS2_32

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'userchat.ui'
 **
-** Created: Sun 25. Oct 22:49:07 2009
+** Created: Mon 26. Oct 23:31:35 2009
 **      by: Qt User Interface Compiler version 4.5.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
