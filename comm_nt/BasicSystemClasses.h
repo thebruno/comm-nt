@@ -76,9 +76,13 @@ public:
 };
 //! Windows Semaphore class
 class SysSemaphore: public SysHandle{
-	int StartingValue, MaxValue;
+        int StartingValue ;
+        int MaxValue;
 public:
-	SysSemaphore(int start, int max): StartingValue(start),MaxValue(max), SysHandle(INVALID_HANDLE_VALUE){
+        SysSemaphore(int start, int max):SysHandle(INVALID_HANDLE_VALUE){
+            StartingValue = start;
+            MaxValue = max;
+            ;
 		SetHandle(CreateSemaphore(NULL, start, max, NULL));
 		if (GetHandle() == INVALID_HANDLE_VALUE || GetHandle() == 0){
 			//b³¹d

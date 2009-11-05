@@ -3,49 +3,17 @@
 #include "userchat.h"
 #include <windows.h>
 
-class Foo : public QObject
-    {
-        Q_OBJECT
-    public:
-        Foo(){}
-        int value() const { return val; }
-    public slots:
-        void setValue( int v) {
-            if ( v != val ) {
-                val = v;
-                emit valueChanged(v);
-            }
-        }
-
-    signals:
-        void valueChanged( int );
-    private:
-        int val;
-    };
-
-
-DWORD WINAPI MyThreadFunction( LPVOID lpParam )
-{
-    static int a = 0;    
-    char buffer [10];
-    a++;
-    itoa(a, buffer,10);
-    MainWindow * window = reinterpret_cast<MainWindow*>(lpParam);
-    window->ui->pushButton->setText(QString(buffer));
-    UserChat u;
-    //window->u[0].setWindowTitle("ala");
-    //window->u[1].close();
-    return 0;
-}
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
     connect(&thread ,  SIGNAL(ReceivedMessage(const QString &)), this, SLOT(ReceivedMessage(const QString &)));
+    LogIn = new LoginForm(this );
+    Communicator = 0;
    // connect(&thread ,  SIGNAL(doit()), this, SLOT(doit()));
-    Communicator = new Client("localhost", 1986, true);
+    //Communicator = new Client("localhost", 1986, true);
+
 }
 
 void MainWindow::ReceivedMessage(const QString & msg){
@@ -59,26 +27,67 @@ MainWindow::~MainWindow()
 {
 
     delete ui;
+    delete LogIn;
+    //delete Communicator;
+    thread.terminate();
 }
 
 void MainWindow::on_pushButton_2_clicked()
 {
-    Communicator->LogIn("Ania");
-    //CreateThread(0, 0, MyThreadFunction, this ,0, 0);
-
     std::string qs = "ola";
     QString q = QString(qs.c_str());
 
     q.toStdString();
-
-
-
-
+    LogIn->show();
 }
 
 void MainWindow::on_pushButton_clicked()
 {
-    u = new UserChat[5];
-    u[0].show();
-    u[1].show();
+    ChatWindows["a"] = new UserChat;
+    ChatWindows["a"]->show();
+}
+
+void MainWindow::on_actionExit_triggered()
+{
+    this->close();
+}
+
+void MainWindow::on_actionAbout_triggered()
+{
+
+}
+
+void MainWindow::on_actionConnect_triggered()
+{
+    if (Communicator != 0) {
+        delete Communicator;
+        Communicator = 0;
+    }
+
+    if (Communicator == 0) {
+
+        if (LogIn->exec() == QDialog::Accepted) {
+            try {
+                QMessageBox::warning(this, QString(LogIn->Host.c_str()), QString(""), QMessageBox::Ok,QMessageBox::Close);
+                Communicator = new Client(LogIn->Host, LogIn->Port, true);
+
+            } catch (SocketException s) {
+                QMessageBox::warning(this, QString("Error"), QString("Cannoct connect to server!"), QMessageBox::Ok,QMessageBox::Close);
+                return;
+            }
+            try {
+                Communicator->LogIn(LogIn->UserLogin);
+
+            } catch (SocketException s) {
+                QMessageBox::warning(this, QString("Error"), QString("Cannoct login to server!"), QMessageBox::Ok,QMessageBox::Close);
+                return;
+            }
+        } else
+            return;
+    }
+}
+
+void MainWindow::on_actionDisconnect_triggered()
+{
+
 }

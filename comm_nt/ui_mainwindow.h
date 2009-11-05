@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'mainwindow.ui'
 **
-** Created: Mon 26. Oct 23:31:35 2009
+** Created: Thu 5. Nov 12:36:07 2009
 **      by: Qt User Interface Compiler version 4.5.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -33,13 +33,14 @@ class Ui_MainWindow
 public:
     QAction *actionExit;
     QAction *actionAbout;
+    QAction *actionConnect;
+    QAction *actionDisconnect;
     QWidget *centralWidget;
     QWidget *verticalLayoutWidget;
     QVBoxLayout *verticalLayout;
-    QListView *listView;
-    QListView *listView_2;
+    QListView *listUsers;
     QHBoxLayout *horizontalLayout;
-    QPushButton *pushButton_2;
+    QPushButton *btnStartChat;
     QPushButton *pushButton;
     QMenuBar *menuBar;
     QMenu *menuFile;
@@ -56,6 +57,10 @@ public:
         actionExit->setObjectName(QString::fromUtf8("actionExit"));
         actionAbout = new QAction(MainWindow);
         actionAbout->setObjectName(QString::fromUtf8("actionAbout"));
+        actionConnect = new QAction(MainWindow);
+        actionConnect->setObjectName(QString::fromUtf8("actionConnect"));
+        actionDisconnect = new QAction(MainWindow);
+        actionDisconnect->setObjectName(QString::fromUtf8("actionDisconnect"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         verticalLayoutWidget = new QWidget(centralWidget);
@@ -66,23 +71,18 @@ public:
         verticalLayout->setMargin(11);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         verticalLayout->setContentsMargins(0, 0, 0, 0);
-        listView = new QListView(verticalLayoutWidget);
-        listView->setObjectName(QString::fromUtf8("listView"));
+        listUsers = new QListView(verticalLayoutWidget);
+        listUsers->setObjectName(QString::fromUtf8("listUsers"));
 
-        verticalLayout->addWidget(listView);
-
-        listView_2 = new QListView(verticalLayoutWidget);
-        listView_2->setObjectName(QString::fromUtf8("listView_2"));
-
-        verticalLayout->addWidget(listView_2);
+        verticalLayout->addWidget(listUsers);
 
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setSpacing(6);
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
-        pushButton_2 = new QPushButton(verticalLayoutWidget);
-        pushButton_2->setObjectName(QString::fromUtf8("pushButton_2"));
+        btnStartChat = new QPushButton(verticalLayoutWidget);
+        btnStartChat->setObjectName(QString::fromUtf8("btnStartChat"));
 
-        horizontalLayout->addWidget(pushButton_2);
+        horizontalLayout->addWidget(btnStartChat);
 
         pushButton = new QPushButton(verticalLayoutWidget);
         pushButton->setObjectName(QString::fromUtf8("pushButton"));
@@ -110,6 +110,8 @@ public:
 
         menuBar->addAction(menuFile->menuAction());
         menuBar->addAction(menuHelp->menuAction());
+        menuFile->addAction(actionConnect);
+        menuFile->addAction(actionDisconnect);
         menuFile->addAction(actionExit);
         menuHelp->addAction(actionAbout);
 
@@ -123,7 +125,9 @@ public:
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0, QApplication::UnicodeUTF8));
         actionExit->setText(QApplication::translate("MainWindow", "Exit", 0, QApplication::UnicodeUTF8));
         actionAbout->setText(QApplication::translate("MainWindow", "About...", 0, QApplication::UnicodeUTF8));
-        pushButton_2->setText(QApplication::translate("MainWindow", "PushButton", 0, QApplication::UnicodeUTF8));
+        actionConnect->setText(QApplication::translate("MainWindow", "Connect", 0, QApplication::UnicodeUTF8));
+        actionDisconnect->setText(QApplication::translate("MainWindow", "Disconnect", 0, QApplication::UnicodeUTF8));
+        btnStartChat->setText(QApplication::translate("MainWindow", "Chat", 0, QApplication::UnicodeUTF8));
         pushButton->setText(QApplication::translate("MainWindow", "PushButton", 0, QApplication::UnicodeUTF8));
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0, QApplication::UnicodeUTF8));
         menuHelp->setTitle(QApplication::translate("MainWindow", "Help", 0, QApplication::UnicodeUTF8));

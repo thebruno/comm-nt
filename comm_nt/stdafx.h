@@ -9,11 +9,7 @@
 
 #include <stdio.h>
 #include <tchar.h>
-
-#pragma warning (disable: 4482)
-
 // TODO: reference additional headers your program requires here
-
 
 
 #include <string>
@@ -25,4 +21,5 @@
 #include <process.h>
 #include <winsock2.h>
 #include <windows.h>
+
 
