@@ -2,9 +2,12 @@
 #define MAINWINDOW_H
 
 #include <QtGui/QMainWindow>
-#include <userchat.h>
+#include <QMessageBox>
+#include "userchat.h"
 #include "ReceiverThread.h"
 #include "Client.h"
+#include "loginform.h"
+
 
 namespace Ui
 {
@@ -18,15 +21,20 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    LoginForm * LogIn;
 
-    UserChat * u;
     Ui::MainWindow *ui;
 public slots:
     void ReceivedMessage(const QString & msg);
 private:
+    std::map<std::string, UserChat *> ChatWindows;
     Client * Communicator;
     ReceiverThread thread;
 private slots:
+    void on_actionDisconnect_triggered();
+    void on_actionConnect_triggered();
+    void on_actionAbout_triggered();
+    void on_actionExit_triggered();
     void on_pushButton_clicked();
     void on_pushButton_2_clicked();
 };

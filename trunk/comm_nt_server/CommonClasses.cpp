@@ -123,6 +123,8 @@ std::string Group::ToString(){
 
 Group::Group(){}
 
+Group::~Group(){}
+
 Group::Group(std::list<User> &u):GroupMembers(u){
 	 
 }
@@ -160,20 +162,29 @@ bool Group::operator==(const Group &g) const {
 	return true;
 }
 
-Message::Message(MessageType type, User receiver, MessageType previousOperation, Result previousResult, std::string previusOperationInfo):
-	Type(type), Receiver(receiver), PreviousOperation(previousOperation), PreviousResult(previousResult), PreviusOperationInfo(previusOperationInfo) {
+Message::Message(MessageType type, User receiver, MessageType previousOperation, Result previousResult, std::string previusOperationInfo) {
+        Type = type;
+        Receiver = receiver;
+        PreviousOperation = previousOperation;
+        PreviousResult = previousResult;
+        PreviusOperationInfo = previusOperationInfo;
 }
 
-Message::Message(MessageType type, User sender, User receiver, Group involvedGroup, std::string text):
-	Type(type), Sender(sender), Receiver(receiver), InvolvedGroup(involvedGroup), Text(text){
-		PreviousOperation = MESSAGETYPE_NOTSET;
-		PreviousResult = RESULT_NOTSET;
+Message::Message(MessageType type, User sender, User receiver, Group involvedGroup, std::string text) {
+        Type  = type;
+        Sender = sender;
+        Receiver = receiver;
+        InvolvedGroup = involvedGroup;
+        Text = text;
+        PreviousOperation = MESSAGETYPE_NOTSET;
+        PreviousResult = RESULT_NOTSET;
 }
 
 
-	Message::Message():Type(MESSAGETYPE_NOTSET), PreviousOperation (MESSAGETYPE_NOTSET),
+Message::Message():Type(MESSAGETYPE_NOTSET), PreviousOperation (MESSAGETYPE_NOTSET),
 		PreviousResult (RESULT_NOTSET){
 }
+Message::~Message() {}
 
 std::string Message::ToString(){
 	std::string toReturn;
