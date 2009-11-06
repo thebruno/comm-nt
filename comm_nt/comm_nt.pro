@@ -29,3 +29,4 @@ FORMS += mainwindow.ui \
     loginform.ui
 LIBS += -L/ \
     -lWS2_32
+RESOURCES += resources.qrc

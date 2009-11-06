@@ -13,4 +13,5 @@ INPUT(
 ./debug\moc_userchat.o
 ./debug\moc_ReceiverThread.o
 ./debug\moc_loginform.o
+./debug\qrc_resources.o
 );

@@ -95,6 +95,9 @@ std::string User::ToString() {
 
 Result User::Parse(std::string& s) {
 	std::vector<std::string> splitString = split(s, MESSAGE_USER_SEPARATOR);
+	if (s.size() == 1 && s[0] == MESSAGE_USER_SEPARATOR) 
+		// empty user - allow it
+		return OK;
 	if (splitString.size() < 2 || splitString[0] == "" || splitString[1] == "")
 		return FAILED;
 	this->Login = splitString[0];
@@ -108,6 +111,16 @@ bool User::operator==(const User& u) const {
 	else 
 		return false;
 
+}
+
+// sortby user login
+int User::operator<(const User & u2) const {
+        if (this->Login == u2.Login)
+                return 0;
+        else if (this->Login < u2.Login)
+            return -1;
+        else
+            return 1;
 }
 
 std::string Group::ToString(){

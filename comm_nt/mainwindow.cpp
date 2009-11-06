@@ -22,22 +22,8 @@ MainWindow::~MainWindow()
 
     delete ui;
     delete LogIn;
-    //delete Communicator;    
-}
-
-void MainWindow::on_pushButton_2_clicked()
-{
-    std::string qs = "ola";
-    QString q = QString(qs.c_str());
-
-    q.toStdString();
-    LogIn->show();
-}
-
-void MainWindow::on_pushButton_clicked()
-{
-    ChatWindows["a"] = new UserChat;
-    ChatWindows["a"]->show();
+    if (Communicator != 0)
+        delete Communicator;
 }
 
 void MainWindow::on_actionExit_triggered()
@@ -59,7 +45,7 @@ void MainWindow::on_actionConnect_triggered()
 
     if (Communicator == 0) {
 
-        if (LogIn->exec() == QDialog::Accepted) {
+        if (LogIn->execExtended() == QDialog::Accepted) {
             try {                
                 Communicator = new Client(LogIn->Host, LogIn->Port, true);
 
@@ -71,7 +57,7 @@ void MainWindow::on_actionConnect_triggered()
                 Communicator->LogIn(LogIn->UserLogin);
 
             } catch (SocketException s) {
-                QMessageBox::warning(this, QString("Error"), QString("Cannoct login to server!"), QMessageBox::Ok,QMessageBox::Close);
+                QMessageBox::warning(this, QString("Error"), QString("Cannoct login to server!"), QMessageBox::Ok, QMessageBox::NoButton);
                 return;
             }
             connect(Communicator->QTReceiverThread,  SIGNAL(MessageReceived()), this, SLOT(MessageReceived()));
@@ -105,7 +91,21 @@ void MainWindow::DoHandling(){
         case RESULT: {
         // wynik logowania
             std::cout << "Result: " << m.ToString() << std::endl;
-            Communicator->Me = m.Receiver;
+            switch (m.PreviousOperation){
+                case LOGIN: {
+                    if (m.PreviousResult == OK) {
+                        Communicator->DataAccess->Wait();
+                        Communicator->Me = m.Receiver;
+                        Communicator->IsLogged = true;
+                        Communicator->DataAccess->Release();
+
+                    } else if(m.PreviousResult == FAILED) {
+                        ; //actually nothing to do
+                    }
+                    QMessageBox::information(this, QString("Login Status"), QString(m.PreviusOperationInfo.c_str()), QMessageBox::Ok, QMessageBox::NoButton);
+                    break;
+                }
+            }
             break;
         }
         case USERLIST: {
@@ -130,13 +130,38 @@ void MainWindow::DoHandling(){
     return;
 }
 
+// odpalaæ w semaforach
 void MainWindow::HandleUserList()
 {   
-    QIcon  icon = QIcon(QString("user.ico"));
+    QIcon  icon = QIcon(QString(":/icons/user.ico"));
     ui->listUsers->clear();
-    std::list<User>::iterator i;
-    for (i = Communicator->Users.begin(); i != Communicator->Users.end(); ++i) {
-        new QListWidgetItem(icon, QString(i->Login.c_str()), ui->listUsers, 0 );
+    std::list<User>::iterator it;
+    Communicator->Users.sort();
+    int i = 0;
+    for (it = Communicator->Users.begin(); it != Communicator->Users.end(); ++it, i++) {
+        new QListWidgetItem(icon, QString(it->Login.c_str()), ui->listUsers, i);
     }
-    ui->listUsers->sortItems(Qt::AscendingOrder);
+}
+
+void MainWindow::on_btnStartChat_clicked()
+{    
+    if (Communicator != 0 && Communicator->IsConnected && Communicator->IsLogged) {
+        Communicator->DataAccess->Wait();
+        QList<QListWidgetItem*> temp = ui->listUsers->selectedItems();
+        Group selectedUsers;
+        QList<QListWidgetItem*>::iterator it;
+        std::list<User>::iterator uit;
+        int i;
+        QListWidgetItem * item;
+        for (it = temp.begin(); it != temp.end(); ++it) {
+            for (i = 0, uit = Communicator->Users.begin(); i < (*it)->type(); ++i, ++uit) {
+                ;
+            }
+            selectedUsers.GroupMembers.push_back(*uit);
+        }
+        //if (ChatWindows.
+        ChatWindows["a"] = new UserChat;
+        ChatWindows["a"]->show();
+        Communicator->DataAccess->Release();
+    }
 }

@@ -18,6 +18,10 @@ protected:
 
 private:
     Ui::UserChat *m_ui;
+
+private slots:
+    void on_btnClose_clicked();
+    void on_btnSend_clicked();
 };
 
 #endif // USERCHAT_H

@@ -104,7 +104,7 @@ void Server::DoReceiving(Socket *userSocket){
 	// clean up
 	DataAccess->Wait();
 	RemoveUser(u);
-	std::cout << "User: " << u.ToString() << " disconnected or has been remved due to error(s)." << std::endl;
+	std::cout << "User: " << u.ToString() << " disconnected." << std::endl;
 	DataAccess->Release();
 	// emulowanie roz³¹czenia tak jakby user przys³a³, ¿e siê roz³¹czy³
 	InputMsgsAccess->Wait();	

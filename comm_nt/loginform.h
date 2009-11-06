@@ -15,6 +15,7 @@ public:
     std::string UserLogin;
     std::string Host;
     int Port;
+    int execExtended();
 
 protected:
     void changeEvent(QEvent *e);
