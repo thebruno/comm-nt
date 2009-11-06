@@ -53,6 +53,7 @@ struct User : public Serializable{
 	virtual std::string ToString();
 	virtual Result Parse(std::string &object);
 	bool operator==(const User & u2) const;
+        int operator<(const User & u2) const;
 
 };
 

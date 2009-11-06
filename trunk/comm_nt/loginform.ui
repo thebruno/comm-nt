@@ -25,6 +25,10 @@
   <property name="windowTitle">
    <string>Login</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="resources.qrc">
+    <normaloff>:/icons/password.ico</normaloff>:/icons/password.ico</iconset>
+  </property>
   <widget class="QWidget" name="horizontalLayoutWidget">
    <property name="geometry">
     <rect>
@@ -40,12 +44,20 @@
       <property name="text">
        <string>Login</string>
       </property>
+      <property name="icon">
+       <iconset resource="resources.qrc">
+        <normaloff>:/icons/ok.ico</normaloff>:/icons/ok.ico</iconset>
+      </property>
      </widget>
     </item>
     <item>
      <widget class="QPushButton" name="pushButton_2">
       <property name="text">
        <string>Cancel</string>
+      </property>
+      <property name="icon">
+       <iconset resource="resources.qrc">
+        <normaloff>:/icons/cancel.ico</normaloff>:/icons/cancel.ico</iconset>
       </property>
      </widget>
     </item>
@@ -147,6 +159,8 @@
   <tabstop>pushButton</tabstop>
   <tabstop>pushButton_2</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

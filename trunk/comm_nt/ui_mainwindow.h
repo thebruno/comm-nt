@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'mainwindow.ui'
 **
-** Created: Fri 6. Nov 01:21:48 2009
+** Created: Fri 6. Nov 11:31:36 2009
 **      by: Qt User Interface Compiler version 4.5.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -21,6 +21,7 @@
 #include <QtGui/QMenu>
 #include <QtGui/QMenuBar>
 #include <QtGui/QPushButton>
+#include <QtGui/QSpacerItem>
 #include <QtGui/QStatusBar>
 #include <QtGui/QToolBar>
 #include <QtGui/QVBoxLayout>
@@ -40,8 +41,9 @@ public:
     QVBoxLayout *verticalLayout;
     QListWidget *listUsers;
     QHBoxLayout *horizontalLayout;
+    QSpacerItem *horizontalSpacer;
     QPushButton *btnStartChat;
-    QPushButton *pushButton;
+    QSpacerItem *horizontalSpacer_2;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QMenu *menuHelp;
@@ -54,14 +56,29 @@ public:
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
         MainWindow->resize(262, 400);
         MainWindow->setMaximumSize(QSize(262, 400));
+        QIcon icon;
+        icon.addFile(QString::fromUtf8(":/icons/chat2.ico"), QSize(), QIcon::Normal, QIcon::Off);
+        MainWindow->setWindowIcon(icon);
         actionExit = new QAction(MainWindow);
         actionExit->setObjectName(QString::fromUtf8("actionExit"));
+        QIcon icon1;
+        icon1.addFile(QString::fromUtf8(":/icons/exit.ico"), QSize(), QIcon::Normal, QIcon::Off);
+        actionExit->setIcon(icon1);
         actionAbout = new QAction(MainWindow);
         actionAbout->setObjectName(QString::fromUtf8("actionAbout"));
+        QIcon icon2;
+        icon2.addFile(QString::fromUtf8(":/icons/about.ico"), QSize(), QIcon::Normal, QIcon::Off);
+        actionAbout->setIcon(icon2);
         actionConnect = new QAction(MainWindow);
         actionConnect->setObjectName(QString::fromUtf8("actionConnect"));
+        QIcon icon3;
+        icon3.addFile(QString::fromUtf8(":/icons/connect.ico"), QSize(), QIcon::Normal, QIcon::Off);
+        actionConnect->setIcon(icon3);
         actionDisconnect = new QAction(MainWindow);
         actionDisconnect->setObjectName(QString::fromUtf8("actionDisconnect"));
+        QIcon icon4;
+        icon4.addFile(QString::fromUtf8(":/icons/disconnect.ico"), QSize(), QIcon::Normal, QIcon::Off);
+        actionDisconnect->setIcon(icon4);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         verticalLayoutWidget = new QWidget(centralWidget);
@@ -80,15 +97,19 @@ public:
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setSpacing(6);
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
+        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout->addItem(horizontalSpacer);
+
         btnStartChat = new QPushButton(verticalLayoutWidget);
         btnStartChat->setObjectName(QString::fromUtf8("btnStartChat"));
+        btnStartChat->setIcon(icon);
 
         horizontalLayout->addWidget(btnStartChat);
 
-        pushButton = new QPushButton(verticalLayoutWidget);
-        pushButton->setObjectName(QString::fromUtf8("pushButton"));
+        horizontalSpacer_2 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-        horizontalLayout->addWidget(pushButton);
+        horizontalLayout->addItem(horizontalSpacer_2);
 
 
         verticalLayout->addLayout(horizontalLayout);
@@ -129,7 +150,6 @@ public:
         actionConnect->setText(QApplication::translate("MainWindow", "Connect", 0, QApplication::UnicodeUTF8));
         actionDisconnect->setText(QApplication::translate("MainWindow", "Disconnect", 0, QApplication::UnicodeUTF8));
         btnStartChat->setText(QApplication::translate("MainWindow", "Chat", 0, QApplication::UnicodeUTF8));
-        pushButton->setText(QApplication::translate("MainWindow", "PushButton", 0, QApplication::UnicodeUTF8));
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0, QApplication::UnicodeUTF8));
         menuHelp->setTitle(QApplication::translate("MainWindow", "Help", 0, QApplication::UnicodeUTF8));
     } // retranslateUi

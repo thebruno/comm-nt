@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'userchat.ui'
 **
-** Created: Thu 5. Nov 22:53:38 2009
+** Created: Fri 6. Nov 11:31:36 2009
 **      by: Qt User Interface Compiler version 4.5.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -31,14 +31,17 @@ public:
     QPushButton *pushButton_2;
     QTextEdit *textEdit;
     QPlainTextEdit *plainTextEdit;
-    QPushButton *pushButton_3;
-    QPushButton *pushButton_4;
+    QPushButton *btnSend;
+    QPushButton *btnClose;
 
     void setupUi(QWidget *UserChat)
     {
         if (UserChat->objectName().isEmpty())
             UserChat->setObjectName(QString::fromUtf8("UserChat"));
         UserChat->resize(400, 300);
+        QIcon icon;
+        icon.addFile(QString::fromUtf8(":/icons/chat.ico"), QSize(), QIcon::Normal, QIcon::Off);
+        UserChat->setWindowIcon(icon);
         groupBox = new QGroupBox(UserChat);
         groupBox->setObjectName(QString::fromUtf8("groupBox"));
         groupBox->setGeometry(QRect(10, 10, 371, 241));
@@ -54,12 +57,19 @@ public:
         plainTextEdit = new QPlainTextEdit(groupBox);
         plainTextEdit->setObjectName(QString::fromUtf8("plainTextEdit"));
         plainTextEdit->setGeometry(QRect(10, 140, 351, 101));
-        pushButton_3 = new QPushButton(UserChat);
-        pushButton_3->setObjectName(QString::fromUtf8("pushButton_3"));
-        pushButton_3->setGeometry(QRect(20, 260, 75, 23));
-        pushButton_4 = new QPushButton(UserChat);
-        pushButton_4->setObjectName(QString::fromUtf8("pushButton_4"));
-        pushButton_4->setGeometry(QRect(290, 260, 75, 23));
+        btnSend = new QPushButton(UserChat);
+        btnSend->setObjectName(QString::fromUtf8("btnSend"));
+        btnSend->setGeometry(QRect(20, 260, 81, 23));
+        QIcon icon1;
+        icon1.addFile(QString::fromUtf8(":/icons/send.ico"), QSize(), QIcon::Normal, QIcon::Off);
+        btnSend->setIcon(icon1);
+        btnSend->setAutoDefault(true);
+        btnClose = new QPushButton(UserChat);
+        btnClose->setObjectName(QString::fromUtf8("btnClose"));
+        btnClose->setGeometry(QRect(290, 260, 75, 23));
+        QIcon icon2;
+        icon2.addFile(QString::fromUtf8(":/icons/exit.ico"), QSize(), QIcon::Normal, QIcon::Off);
+        btnClose->setIcon(icon2);
 
         retranslateUi(UserChat);
 
@@ -72,8 +82,8 @@ public:
         groupBox->setTitle(QApplication::translate("UserChat", "GroupBox", 0, QApplication::UnicodeUTF8));
         pushButton->setText(QApplication::translate("UserChat", "PushButton", 0, QApplication::UnicodeUTF8));
         pushButton_2->setText(QApplication::translate("UserChat", "PushButton", 0, QApplication::UnicodeUTF8));
-        pushButton_3->setText(QApplication::translate("UserChat", "PushButton", 0, QApplication::UnicodeUTF8));
-        pushButton_4->setText(QApplication::translate("UserChat", "PushButton", 0, QApplication::UnicodeUTF8));
+        btnSend->setText(QApplication::translate("UserChat", "Send", 0, QApplication::UnicodeUTF8));
+        btnClose->setText(QApplication::translate("UserChat", "Close", 0, QApplication::UnicodeUTF8));
         Q_UNUSED(UserChat);
     } // retranslateUi
 

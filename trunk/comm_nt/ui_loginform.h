@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'loginform.ui'
 **
-** Created: Fri 6. Nov 01:06:24 2009
+** Created: Fri 6. Nov 11:31:36 2009
 **      by: Qt User Interface Compiler version 4.5.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -48,6 +48,9 @@ public:
         LoginForm->resize(220, 180);
         LoginForm->setMinimumSize(QSize(220, 180));
         LoginForm->setMaximumSize(QSize(220, 180));
+        QIcon icon;
+        icon.addFile(QString::fromUtf8(":/icons/password.ico"), QSize(), QIcon::Normal, QIcon::Off);
+        LoginForm->setWindowIcon(icon);
         horizontalLayoutWidget = new QWidget(LoginForm);
         horizontalLayoutWidget->setObjectName(QString::fromUtf8("horizontalLayoutWidget"));
         horizontalLayoutWidget->setGeometry(QRect(10, 130, 201, 41));
@@ -56,11 +59,17 @@ public:
         horizontalLayout->setContentsMargins(0, 0, 0, 0);
         pushButton = new QPushButton(horizontalLayoutWidget);
         pushButton->setObjectName(QString::fromUtf8("pushButton"));
+        QIcon icon1;
+        icon1.addFile(QString::fromUtf8(":/icons/ok.ico"), QSize(), QIcon::Normal, QIcon::Off);
+        pushButton->setIcon(icon1);
 
         horizontalLayout->addWidget(pushButton);
 
         pushButton_2 = new QPushButton(horizontalLayoutWidget);
         pushButton_2->setObjectName(QString::fromUtf8("pushButton_2"));
+        QIcon icon2;
+        icon2.addFile(QString::fromUtf8(":/icons/cancel.ico"), QSize(), QIcon::Normal, QIcon::Off);
+        pushButton_2->setIcon(icon2);
 
         horizontalLayout->addWidget(pushButton_2);
 

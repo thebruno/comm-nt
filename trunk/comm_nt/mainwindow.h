@@ -31,12 +31,11 @@ private:
     Client * Communicator;
     void HandleUserList();
 private slots:
+    void on_btnStartChat_clicked();
     void on_actionDisconnect_triggered();
     void on_actionConnect_triggered();
     void on_actionAbout_triggered();
     void on_actionExit_triggered();
-    void on_pushButton_clicked();
-    void on_pushButton_2_clicked();
 };
 
 #endif // MAINWINDOW_H

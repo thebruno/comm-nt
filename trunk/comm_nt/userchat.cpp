@@ -24,3 +24,13 @@ void UserChat::changeEvent(QEvent *e)
         break;
     }
 }
+
+void UserChat::on_btnSend_clicked()
+{
+
+}
+
+void UserChat::on_btnClose_clicked()
+{
+
+}

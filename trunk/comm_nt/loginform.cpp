@@ -57,3 +57,8 @@ void LoginForm::on_pushButton_2_clicked()
     this->hide();
     this->reject();
 }
+
+int LoginForm::execExtended(){
+    m_ui->txtBoxLogin->clear();
+    return exec();
+}

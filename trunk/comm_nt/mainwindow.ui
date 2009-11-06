@@ -19,6 +19,10 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>:/icons/chat2.ico</normaloff>:/icons/chat2.ico</iconset>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
@@ -36,18 +40,41 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
         <widget class="QPushButton" name="btnStartChat">
          <property name="text">
           <string>Chat</string>
          </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>:/icons/chat2.ico</normaloff>:/icons/chat2.ico</iconset>
+         </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton">
-         <property name="text">
-          <string>PushButton</string>
+        <spacer name="horizontalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
          </property>
-        </widget>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </item>
@@ -90,21 +117,37 @@
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionExit">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/icons/exit.ico</normaloff>:/icons/exit.ico</iconset>
+   </property>
    <property name="text">
     <string>Exit</string>
    </property>
   </action>
   <action name="actionAbout">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/icons/about.ico</normaloff>:/icons/about.ico</iconset>
+   </property>
    <property name="text">
     <string>About...</string>
    </property>
   </action>
   <action name="actionConnect">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/icons/connect.ico</normaloff>:/icons/connect.ico</iconset>
+   </property>
    <property name="text">
     <string>Connect</string>
    </property>
   </action>
   <action name="actionDisconnect">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/icons/disconnect.ico</normaloff>:/icons/disconnect.ico</iconset>
+   </property>
    <property name="text">
     <string>Disconnect</string>
    </property>
