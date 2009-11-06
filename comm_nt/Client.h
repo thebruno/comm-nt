@@ -4,6 +4,10 @@
 #include "BasicSystemClasses.h"
 #include "CommonClasses.h"
 #include "Socket.h"
+#include "ReceiverThread.h"
+
+class MainWindow;
+class ReceiverThread;
 
 class Client {
 	std::string Host;
@@ -20,9 +24,8 @@ class Client {
 	std::list<Message> InputMsgsHistory;
 	std::list<Message> OutputMsgsHistory;
 
-	SysThread * ReceiverThread;
+
 	SysThread * SenderThread;
-	SysThread * HandlerThread;
 
 	SysSemaphore * DataAccess;
 	SysSemaphore * InputMsgsAccess;
@@ -37,14 +40,10 @@ class Client {
 
 	// sender thread api funtion
 	static unsigned long __stdcall SenderFunction(void *c);
-	// reciever thread api funtion
-	static unsigned long __stdcall ReceiverFunction(void *c);
-	// handler thread api funtion
-	static unsigned long __stdcall HandlerFunction(void *c);
 
 public:
 	
-
+        ReceiverThread * QTReceiverThread;
 	Client();
 	~Client();
 	Client(std::string host, int port, bool connect = false);
@@ -62,9 +61,10 @@ public:
 	void SendToGroup(Group g, std::string text);
 
 	void DoHandling();
-	void DoReceiving();
 	void DoSending();
 	std::string PrintUsers();
+        friend class MainWindow;
+        friend class ReceiverThread;
 
 };
 

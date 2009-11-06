@@ -180,7 +180,7 @@ Result Client::LogIn(std::string login){
 		LogOut();
 	}
 	OutputMsgsAccess->Wait();
-	OutputMsgs.push_back(Message(LOGIN, User(login, IP), User(), Group(), ""));
+	OutputMsgs.push_back(Message(LOGIN, DateTimeNow(), User(login, IP), User(), Group(), ""));
 	OutputMsgsAccess->Release();
 	NewOutputMessage->Release();
 	return OK;
@@ -191,7 +191,7 @@ Result Client::LogOut(){
 		IsLogged = false;
 	if (IsLogged) {
 		OutputMsgsAccess->Wait();
-		OutputMsgs.push_back(Message(LOGIN, Me, User(), Group(), ""));
+		OutputMsgs.push_back(Message(LOGIN, DateTimeNow(), Me, User(), Group(), ""));
 		OutputMsgsAccess->Release();
 		Me = User();
 	}
@@ -238,10 +238,10 @@ std::string Client::PrintUsers() {
 }
 
 void Client::SendToUser(User recipient, std::string text){
-	SendAsynchronously(Message(MESSAGE, Me, recipient, Group(), text));
+	SendAsynchronously(Message(MESSAGE, DateTimeNow(), Me, recipient, Group(), text));
 }
 
 void Client::SendToGroup(Group g, std::string text){
-	Message m(GROUPMESSAGE, Me, User(), g, text);
+	Message m(GROUPMESSAGE, DateTimeNow(), Me, User(), g, text);
 	SendAsynchronously(m);
 }

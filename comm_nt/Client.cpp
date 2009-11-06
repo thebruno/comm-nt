@@ -7,85 +7,9 @@ unsigned long __stdcall Client:: SenderFunction(void*c){
 	return 0;
 }
 
-unsigned long __stdcall Client:: ReceiverFunction(void*c){
-	Client * C = reinterpret_cast<Client*>(c);
-	C->DoReceiving();
-	return 0;
-}
 
-unsigned long __stdcall Client:: HandlerFunction(void*c){
-	Client * C = reinterpret_cast<Client*>(c);
-	C->DoHandling();
-	return 0;
-}
 
-void Client::DoHandling(){
-	Message m;
-	while(1) {
-		NewInputMessage->Wait();
-		InputMsgsAccess->Wait();
-		m = InputMsgs.back();
-		InputMsgs.pop_back();
-		InputMsgsAccess->Release();
-		switch (m.Type){
-		case LOGIN: {
-			// not ussed
-			break;
-		}
-		case LOGOUT: {		
-			// not used
-			break;
-		}
-		case RESULT: {		
-			// wynik logowania 
-			std::cout << "Result: " << m.ToString() << std::endl;
-			Me = m.Receiver;
-			break;
-		}
-		case USERLIST: {
-			std::cout << "User list: " << m.ToString() << std::endl;
-			DataAccess->Wait();
-			Users = m.InvolvedGroup.GroupMembers;
-			DataAccess->Release();
-			break;
-		}
-		case MESSAGE: {	
-			std::cout << "Message: " << m.ToString() << std::endl;
-			break;
-		}
-		case GROUPMESSAGE: {	
-			std::cout << "Group Message: " << m.ToString() << std::endl;
-			break;
-		}
-		default:
-			break;
-		}
-	}
-	return;
-}
 
-void Client::DoReceiving(){
-
-	while (1){	
-		// do receiving
-		if (SelectSocket::CanRead(CommSocket, true)) {
-			Message m = Message();
-			Result result = Receive(m);		
-			if (result != OK)
-				break;
-			std::cout << "Received: " << m.ToString() << " from user: " << m.Sender.ToString() << std::endl;
-			InputMsgsAccess->Wait();
-			InputMsgs.push_back(m);
-			InputMsgsAccess->Release();
-			NewInputMessage->Release();
-			if (m.Type == LOGOUT) {
-				std::cout << "Log Out" << std::endl;
-				return;
-			}
-		}
-	}
-	return;
-}
 
 void Client::DoSending(){
 	while(1) {
@@ -131,16 +55,16 @@ Result Client::Connect(std::string host, int port) {
 	InputMsgsAccess = new SysSemaphore(1, 1);
 	OutputMsgsAccess = new SysSemaphore(1, 1);
 
-	ReceiverThread = new SysThread(Client::ReceiverFunction, (void *) this);
+        QTReceiverThread = new ReceiverThread(this);
 	SenderThread = new SysThread(Client::SenderFunction, (void *) this);
-	HandlerThread = new SysThread(Client::HandlerFunction, (void *) this);
 
-	HandlerThread->Start();
-	SenderThread->Start();
-	ReceiverThread->Start();
+
+        //QTReceiverThread->Start();
 
 	IsConnected = true;
 	IP = GetHostName("localhost");
+        SenderThread->Start();
+        QTReceiverThread->start();
 	return OK;
 }
 
@@ -157,13 +81,11 @@ Result Client::Disconnect() {
 		delete InputMsgsAccess;
 		delete OutputMsgsAccess;
 
-		ReceiverThread->Terminate();
+                QTReceiverThread->terminate();
 		SenderThread->Terminate();
-		HandlerThread->Terminate();
 
-		delete ReceiverThread;
+                delete QTReceiverThread;
 		delete SenderThread;
-		delete HandlerThread;
 		CommSocket = 0;
 		IsConnected = false;
 	}
@@ -180,7 +102,7 @@ Result Client::LogIn(std::string login){
 		LogOut();
 	}
 	OutputMsgsAccess->Wait();
-	OutputMsgs.push_back(Message(LOGIN, User(login, IP), User(), Group(), ""));
+        OutputMsgs.push_back(Message(LOGIN, DateTimeNow(), User(login, IP), User(), Group(), ""));
 	OutputMsgsAccess->Release();
 	NewOutputMessage->Release();
 	return OK;
@@ -191,7 +113,7 @@ Result Client::LogOut(){
 		IsLogged = false;
 	if (IsLogged) {
 		OutputMsgsAccess->Wait();
-		OutputMsgs.push_back(Message(LOGIN, Me, User(), Group(), ""));
+                OutputMsgs.push_back(Message(LOGIN, DateTimeNow(), Me, User(), Group(), ""));
 		OutputMsgsAccess->Release();
 		Me = User();
 	}
@@ -238,11 +160,11 @@ std::string Client::PrintUsers() {
 }
 
 void Client::SendToUser(User recipient, std::string text){
-        Message m = Message(MESSAGE, Me, recipient, Group(), text);
+        Message m = Message(MESSAGE, DateTimeNow(), Me, recipient, Group(), text);
         SendAsynchronously(m);
 }
 
 void Client::SendToGroup(Group g, std::string text){
-	Message m(GROUPMESSAGE, Me, User(), g, text);
+        Message m(GROUPMESSAGE, DateTimeNow(), Me, User(), g, text);
 	SendAsynchronously(m);
 }

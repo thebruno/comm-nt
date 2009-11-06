@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'mainwindow.ui'
 **
-** Created: Thu 5. Nov 12:36:07 2009
+** Created: Fri 6. Nov 01:21:48 2009
 **      by: Qt User Interface Compiler version 4.5.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -16,7 +16,7 @@
 #include <QtGui/QButtonGroup>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QHeaderView>
-#include <QtGui/QListView>
+#include <QtGui/QListWidget>
 #include <QtGui/QMainWindow>
 #include <QtGui/QMenu>
 #include <QtGui/QMenuBar>
@@ -38,7 +38,7 @@ public:
     QWidget *centralWidget;
     QWidget *verticalLayoutWidget;
     QVBoxLayout *verticalLayout;
-    QListView *listUsers;
+    QListWidget *listUsers;
     QHBoxLayout *horizontalLayout;
     QPushButton *btnStartChat;
     QPushButton *pushButton;
@@ -53,6 +53,7 @@ public:
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
         MainWindow->resize(262, 400);
+        MainWindow->setMaximumSize(QSize(262, 400));
         actionExit = new QAction(MainWindow);
         actionExit->setObjectName(QString::fromUtf8("actionExit"));
         actionAbout = new QAction(MainWindow);
@@ -71,7 +72,7 @@ public:
         verticalLayout->setMargin(11);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         verticalLayout->setContentsMargins(0, 0, 0, 0);
-        listUsers = new QListView(verticalLayoutWidget);
+        listUsers = new QListWidget(verticalLayoutWidget);
         listUsers->setObjectName(QString::fromUtf8("listUsers"));
 
         verticalLayout->addWidget(listUsers);

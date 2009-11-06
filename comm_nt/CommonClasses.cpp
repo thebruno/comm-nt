@@ -162,16 +162,18 @@ bool Group::operator==(const Group &g) const {
 	return true;
 }
 
-Message::Message(MessageType type, User receiver, MessageType previousOperation, Result previousResult, std::string previusOperationInfo) {
+Message::Message(MessageType type, std::string created, User receiver, MessageType previousOperation, Result previousResult, std::string previusOperationInfo) {
         Type = type;
+		Created = created;
         Receiver = receiver;
         PreviousOperation = previousOperation;
         PreviousResult = previousResult;
         PreviusOperationInfo = previusOperationInfo;
 }
 
-Message::Message(MessageType type, User sender, User receiver, Group involvedGroup, std::string text) {
+Message::Message(MessageType type, std::string created, User sender, User receiver, Group involvedGroup, std::string text) {
         Type  = type;
+		Created = created;
         Sender = sender;
         Receiver = receiver;
         InvolvedGroup = involvedGroup;
@@ -181,8 +183,8 @@ Message::Message(MessageType type, User sender, User receiver, Group involvedGro
 }
 
 
-Message::Message():Type(MESSAGETYPE_NOTSET), PreviousOperation (MESSAGETYPE_NOTSET),
-		PreviousResult (RESULT_NOTSET){
+Message::Message():Type(MESSAGETYPE_NOTSET), PreviousOperation (MESSAGETYPE_NOTSET), PreviousResult (RESULT_NOTSET){
+	Created = DateTimeNow();
 }
 Message::~Message() {}
 
@@ -193,10 +195,14 @@ std::string Message::ToString(){
 	switch (Type){
 		case LOGIN: 
 		case LOGOUT: {
+			toReturn.append(Created);
+			toReturn += MESSAGE_SEPARATOR;
 			toReturn.append(Sender.ToString());		
 			break;
 		}
 		case RESULT: {
+			toReturn.append(Created);
+			toReturn += MESSAGE_SEPARATOR;
 			toReturn.append(Receiver.ToString());
 			toReturn += MESSAGE_SEPARATOR;
 			toReturn.append(::ToString(PreviousOperation));
@@ -207,12 +213,16 @@ std::string Message::ToString(){
 			break;
 		}
 		case USERLIST: {
+			toReturn.append(Created);
+			toReturn += MESSAGE_SEPARATOR;
 			toReturn.append(Receiver.ToString());
 			toReturn += MESSAGE_SEPARATOR;
 			toReturn.append(InvolvedGroup.ToString());
 			break;
 		}
 		case MESSAGE: {
+			toReturn.append(Created);
+			toReturn += MESSAGE_SEPARATOR;
 			toReturn.append(Sender.ToString());
 			toReturn += MESSAGE_SEPARATOR;
 			toReturn.append(Receiver.ToString());
@@ -221,6 +231,8 @@ std::string Message::ToString(){
 			break;
 		}
 		case GROUPMESSAGE: {
+			toReturn.append(Created);
+			toReturn += MESSAGE_SEPARATOR;
 			toReturn.append(Sender.ToString());
 			toReturn += MESSAGE_SEPARATOR;
 			//toReturn.append(Receiver.ToString());
@@ -249,47 +261,65 @@ Result Message::Parse(std::string &s){
 	switch (Type) {
 		case LOGIN:		
 		case LOGOUT: {
-			if (splitFields.size() != 2 || 
-				(Sender.Parse(splitFields[1]) != OK)) 
+			if (splitFields.size() != 3 || (Sender.Parse(splitFields[2]) != OK)) 
 					return FAILED;
+			Created = splitFields[1];
 			break;
 		}
 		case RESULT: {
-			if (splitFields.size() != 5 || 				
-				(Receiver.Parse(splitFields[1]) != OK) ||
-				(PreviousOperation = ToMessageType(splitFields[2])) == MESSAGETYPE_NOTSET ||
-				(PreviousResult = ToResult(splitFields[3])) == RESULT_NOTSET )				
+			if (splitFields.size() != 6 || 				
+				(Receiver.Parse(splitFields[2]) != OK) ||
+				(PreviousOperation = ToMessageType(splitFields[3])) == MESSAGETYPE_NOTSET ||
+				(PreviousResult = ToResult(splitFields[4])) == RESULT_NOTSET )				
 				return FAILED;
-			PreviusOperationInfo = splitFields[4];				
+			Created = splitFields[1];
+			PreviusOperationInfo = splitFields[5];				
 			break;
 		}
 		case USERLIST: {
-			if (splitFields.size() != 3 || 
-				(Receiver.Parse(splitFields[1]) != OK) ||
-				(InvolvedGroup.Parse(splitFields[2]) != OK)) 
+			if (splitFields.size() != 4 || 
+				(Receiver.Parse(splitFields[2]) != OK) ||
+				(InvolvedGroup.Parse(splitFields[3]) != OK)) 
 					return FAILED;
+			Created = splitFields[1];
 			break;
 		}
 		case MESSAGE: {
-			if (splitFields.size() != 4 || 
-				(Sender.Parse(splitFields[1]) != OK) ||
-				(Receiver.Parse(splitFields[2]) != OK)) 
+			if (splitFields.size() != 5 || 
+				(Sender.Parse(splitFields[2]) != OK) ||
+				(Receiver.Parse(splitFields[3]) != OK)) 
 					return FAILED;
-				Text = splitFields[3];
+			Created = splitFields[1];
+			Text = splitFields[4];
 			break;
 		}
 		case GROUPMESSAGE: {
-			if (splitFields.size() != 4 || 
-				(Sender.Parse(splitFields[1]) != OK) ||
+			if (splitFields.size() != 5 || 
+				(Sender.Parse(splitFields[2]) != OK) ||
 				// omit receiver field - it is used only on server
 				//(Receiver.Parse(splitFields[2]) != OK) ||
-				(InvolvedGroup.Parse(splitFields[2]) != OK)) 
+				(InvolvedGroup.Parse(splitFields[3]) != OK)) 
 					return FAILED;
-				Text = splitFields[3];
+				Created = splitFields[1];
+				Text = splitFields[4];
 			break;
 		}
 		default:
 			return FAILED;
 	}
 	return OK;
+}
+
+
+std::string DateTimeNow(){
+	std::stringstream toReturn;
+	SYSTEMTIME st;
+    GetSystemTime(&st);
+	toReturn << st.wYear << "-" 
+		<< std::setw(2) << std::setfill('0') << st.wMonth << "-"
+		<< std::setw(2) << std::setfill('0') << st.wDay << " " 
+		<< std::setw(2) << std::setfill('0') << st.wHour << ":" 
+		<< std::setw(2) << std::setfill('0') << st.wMinute << ":"
+		<< std::setw(2) << std::setfill('0') << st.wSecond;    
+	return toReturn.str();
 }

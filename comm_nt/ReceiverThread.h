@@ -3,26 +3,24 @@
 #include <QThread.h>
 #include <QWaitCondition.h>
 #include <QMutex.h>
+
+class Client;
 class ReceiverThread : public QThread
 {
     Q_OBJECT
 
 public:
-    ReceiverThread();
+    Client * Communicator;
+    ReceiverThread(void * client);
     ~ReceiverThread();
 
 
 signals:
-    void ReceivedMessage(const QString &);
+    void MessageReceived();
 
 
 protected:
     void run();
-
-private:
-
-    QWaitCondition newMessage;
-    QMutex mutex;
 };
 
 #endif // RECEIVERTHREAD_H
