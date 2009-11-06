@@ -23,6 +23,10 @@ public:
     LoginForm * LogIn;
 
     Ui::MainWindow *ui;
+    void CloseAllWindows();
+    bool ChatWindowEsists(Group & g);
+    bool ChatWindowEsists(User & u);
+    void SendMsgFromGUI(Group receivers, std::string msg);
 public slots:
     void MessageReceived();
 private:
