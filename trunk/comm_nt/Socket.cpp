@@ -194,7 +194,7 @@ ClientSocket::ClientSocket(const std::string& host, int port) : Socket() {
 	std::string error;
 
 	hostent *hostInfo;
-	if ((hostInfo = gethostbyname(host.c_str())) == 0) {
+	if ((hostInfo = gethostbyname(host.c_str())) == 0 && (hostInfo = gethostbyaddr(host.c_str(), 4, AF_INET))) {
 		throw SocketException(strerror(errno));
 	}
 

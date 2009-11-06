@@ -79,7 +79,7 @@ class SysSemaphore: public SysHandle{
         int StartingValue ;
         int MaxValue;
 public:
-        SysSemaphore(int start, int max):SysHandle(INVALID_HANDLE_VALUE){
+        SysSemaphore(int start, int max):SysHandle (INVALID_HANDLE_VALUE){
             StartingValue = start;
             MaxValue = max;
             ;

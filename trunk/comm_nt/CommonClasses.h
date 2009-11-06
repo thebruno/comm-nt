@@ -9,6 +9,7 @@ class Serializable{
 	virtual Result Parse(std::string &s) = 0;
 };
 
+std::string DateTimeNow();
 
 #define MESSAGE_DELIMITER (char)0xFF // add at the end of every message while sending
 #define MESSAGE_SEPARATOR (char)0xFE // separates fields in the message
@@ -67,6 +68,7 @@ struct Group: public Serializable{
 
 struct Message: public Serializable {
 	MessageType Type;
+	std::string Created;
 	MessageType PreviousOperation;
 	Result PreviousResult;
 	std::string PreviusOperationInfo;
@@ -74,8 +76,8 @@ struct Message: public Serializable {
 	User Receiver;
 	Group InvolvedGroup;
 	std::string Text;
-	Message(MessageType type, User sender, User receiver, Group involvedGroup, std::string text);
-	Message(MessageType type, User receiver, MessageType previousOperation, Result previousResult, std::string previusOperationInfo);
+	Message(MessageType type, std::string created, User sender, User receiver, Group involvedGroup, std::string text);
+	Message(MessageType type, std::string created, User receiver, MessageType previousOperation, Result previousResult, std::string previusOperationInfo);
 	Message();
         virtual ~Message();
 	virtual std::string ToString();

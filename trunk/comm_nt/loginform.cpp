@@ -7,8 +7,10 @@ LoginForm::LoginForm(QWidget *parent) :
     m_ui(new Ui::LoginForm)
 {
     m_ui->setupUi(this);
-    m_ui->cmBoxServer->addItem(QString("127.0.0.0"));
+    m_ui->txtBoxLogin->setText(QString());
+    m_ui->cmBoxServer->addItem(QString("127.0.0.1"));
     m_ui->cmBoxServer->addItem(QString("192.168.0.1"));
+    m_ui->txtBoxLogin->setFocus();
 }
 
 LoginForm::~LoginForm()
@@ -38,7 +40,7 @@ void LoginForm::on_pushButton_clicked()
         Message += "\nEnter port";
 
     Port = atoi(m_ui->txtBoxPort->text().toStdString().c_str());
-    if (Port == 0)
+    if (Port <= 0)
         Message += "\nEnter port value correctly.";
 
     if (Message.size() != 0) {

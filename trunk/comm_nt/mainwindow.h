@@ -4,7 +4,6 @@
 #include <QtGui/QMainWindow>
 #include <QMessageBox>
 #include "userchat.h"
-#include "ReceiverThread.h"
 #include "Client.h"
 #include "loginform.h"
 
@@ -25,11 +24,12 @@ public:
 
     Ui::MainWindow *ui;
 public slots:
-    void ReceivedMessage(const QString & msg);
+    void MessageReceived();
 private:
+    void DoHandling();
     std::map<std::string, UserChat *> ChatWindows;
     Client * Communicator;
-    ReceiverThread thread;
+    void HandleUserList();
 private slots:
     void on_actionDisconnect_triggered();
     void on_actionConnect_triggered();

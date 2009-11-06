@@ -1,26 +1,31 @@
 #include "ReceiverThread.h"
-
-ReceiverThread::ReceiverThread(){
-    start();
+#include "Client.h"
+ReceiverThread::ReceiverThread(void * client){
+    Communicator = static_cast<Client *> (client);
 }
 ReceiverThread::~ReceiverThread(){
-    {
-    //QMutexLocker locker(&mutex);
-    newMessage.wakeOne();
-    }
-    wait();
 }
 
 void ReceiverThread::run(){
-    while(1) {
-        msleep(2000);
-        {
-         //   QMutexLocker locker(&mutex);
-
+    while (1){
+    // do receiving
+        if (SelectSocket::CanRead(Communicator->CommSocket, true)) {
+            Message m = Message();
+            Result result = Communicator->Receive(m);
+            if (result != OK)
+                break;
+            std::cout << "Received: " << m.ToString() << " from user: " << m.Sender.ToString() << std::endl;
+            Communicator->InputMsgsAccess->Wait();
+            Communicator->InputMsgs.push_back(m);
+            Communicator->InputMsgsAccess->Release();
+            Communicator->NewInputMessage->Release();
+            emit MessageReceived();
+            if (m.Type == LOGOUT) {
+                std::cout << "Log Out" << std::endl;
+                return;
+            }
         }
-        emit ReceivedMessage(QString("test"));
-        //emit doit();
-        msleep(5000);
     }
+    return;
 }
 

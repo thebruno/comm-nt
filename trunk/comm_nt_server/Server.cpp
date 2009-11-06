@@ -64,7 +64,7 @@ void Server::DoReceiving(Socket *userSocket){
 			// sand back that user have to put different login
 			std::string info;
 			info.append("Login: ").append(m.Sender.Login).append(" is not available. Please choose different login.");
-			Message temp (RESULT, User(), LOGIN, FAILED, info) ;			
+			Message temp (RESULT, DateTimeNow(), User(), LOGIN, FAILED, info) ;			
 			this->Send(temp, userSocket);
 			delete userSocket;
 			return;
@@ -108,7 +108,7 @@ void Server::DoReceiving(Socket *userSocket){
 	DataAccess->Release();
 	// emulowanie roz³¹czenia tak jakby user przys³a³, ¿e siê roz³¹czy³
 	InputMsgsAccess->Wait();	
-	InputMsgs.push_back(Message(LOGOUT, u, User(), Group(), ""));
+	InputMsgs.push_back(Message(LOGOUT, DateTimeNow(), u, User(), Group(), ""));
 	InputMsgsAccess->Release();
 	NewMessage->Release();
 	return;
@@ -132,10 +132,10 @@ void Server::DoHandling(){
 			Message newMessage;
 			// send all users list to all users
 			for (uIt = Users.begin(); uIt != Users.end(); ++uIt) {
-				newMessage = Message(USERLIST, User(), *uIt, Group(Users), "");
+				newMessage = Message(USERLIST, DateTimeNow(), User(), *uIt, Group(Users), "");
 				this->Send(newMessage);
 			}
-			newMessage = Message(RESULT, m.Sender, LOGIN, OK, "You have logged in successfully");
+			newMessage = Message(RESULT, DateTimeNow(), m.Sender, LOGIN, OK, "You have logged in successfully");
 			this->Send(newMessage);
 			break;
 		}
@@ -144,7 +144,7 @@ void Server::DoHandling(){
 			// his/her thread will be removed soon
 			// send all users list
 			for (uIt = Users.begin(); uIt != Users.end(); ++uIt) {
-				Message newMessage = Message(USERLIST, User(), *uIt, Group(Users), "");
+				Message newMessage = Message(USERLIST, DateTimeNow(), User(), *uIt, Group(Users), "");
 				this->Send(newMessage);
 			}
 			break;

@@ -2,34 +2,27 @@
 #include "ui_mainwindow.h"
 #include "userchat.h"
 #include <windows.h>
+#include <QListWidgetItem>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);
-
-    connect(&thread ,  SIGNAL(ReceivedMessage(const QString &)), this, SLOT(ReceivedMessage(const QString &)));
+    ui->setupUi(this);    
     LogIn = new LoginForm(this );
     Communicator = 0;
-   // connect(&thread ,  SIGNAL(doit()), this, SLOT(doit()));
-    //Communicator = new Client("localhost", 1986, true);
-
+    ui->listUsers->setSelectionMode(QAbstractItemView::MultiSelection );
 }
 
-void MainWindow::ReceivedMessage(const QString & msg){
-    this->ui->pushButton->setText(msg);
-
+void MainWindow::MessageReceived(){
+    DoHandling();
 }
-
-
 
 MainWindow::~MainWindow()
 {
 
     delete ui;
     delete LogIn;
-    //delete Communicator;
-    thread.terminate();
+    //delete Communicator;    
 }
 
 void MainWindow::on_pushButton_2_clicked()
@@ -67,8 +60,7 @@ void MainWindow::on_actionConnect_triggered()
     if (Communicator == 0) {
 
         if (LogIn->exec() == QDialog::Accepted) {
-            try {
-                QMessageBox::warning(this, QString(LogIn->Host.c_str()), QString(""), QMessageBox::Ok,QMessageBox::Close);
+            try {                
                 Communicator = new Client(LogIn->Host, LogIn->Port, true);
 
             } catch (SocketException s) {
@@ -82,6 +74,7 @@ void MainWindow::on_actionConnect_triggered()
                 QMessageBox::warning(this, QString("Error"), QString("Cannoct login to server!"), QMessageBox::Ok,QMessageBox::Close);
                 return;
             }
+            connect(Communicator->QTReceiverThread,  SIGNAL(MessageReceived()), this, SLOT(MessageReceived()));
         } else
             return;
     }
@@ -90,4 +83,60 @@ void MainWindow::on_actionConnect_triggered()
 void MainWindow::on_actionDisconnect_triggered()
 {
 
+}
+
+void MainWindow::DoHandling(){  
+    Message m;
+    Communicator->NewInputMessage->Wait();
+    Communicator->InputMsgsAccess->Wait();
+    m = Communicator->InputMsgs.back();
+    Communicator->InputMsgs.pop_back();
+    Communicator->InputMsgsAccess->Release();
+    //QMessageBox::information(this, QString("Message") , QString(m.ToString().c_str()), QMessageBox::Ok,QMessageBox::Close);
+    switch (m.Type){
+        case LOGIN: {
+            // not ussed
+            break;
+         }
+        case LOGOUT: {
+            // not used
+            break;
+        }
+        case RESULT: {
+        // wynik logowania
+            std::cout << "Result: " << m.ToString() << std::endl;
+            Communicator->Me = m.Receiver;
+            break;
+        }
+        case USERLIST: {
+            std::cout << "User list: " << m.ToString() << std::endl;
+            Communicator->DataAccess->Wait();
+            Communicator->Users = m.InvolvedGroup.GroupMembers;
+            HandleUserList();
+            Communicator->DataAccess->Release();
+            break;
+        }
+        case MESSAGE: {
+                std::cout << "Message: " << m.ToString() << std::endl;
+                break;
+        }
+        case GROUPMESSAGE: {
+                std::cout << "Group Message: " << m.ToString() << std::endl;
+                break;
+        }
+        default:
+                break;
+        }
+    return;
+}
+
+void MainWindow::HandleUserList()
+{   
+    QIcon  icon = QIcon(QString("user.ico"));
+    ui->listUsers->clear();
+    std::list<User>::iterator i;
+    for (i = Communicator->Users.begin(); i != Communicator->Users.end(); ++i) {
+        new QListWidgetItem(icon, QString(i->Login.c_str()), ui->listUsers, 0 );
+    }
+    ui->listUsers->sortItems(Qt::AscendingOrder);
 }

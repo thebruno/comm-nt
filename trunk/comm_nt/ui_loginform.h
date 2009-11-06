@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'loginform.ui'
 **
-** Created: Thu 5. Nov 12:36:07 2009
+** Created: Fri 6. Nov 01:06:24 2009
 **      by: Qt User Interface Compiler version 4.5.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -86,6 +86,10 @@ public:
         cmBoxServer->setObjectName(QString::fromUtf8("cmBoxServer"));
         cmBoxServer->setGeometry(QRect(50, 50, 141, 22));
         cmBoxServer->setEditable(true);
+        QWidget::setTabOrder(txtBoxLogin, cmBoxServer);
+        QWidget::setTabOrder(cmBoxServer, txtBoxPort);
+        QWidget::setTabOrder(txtBoxPort, pushButton);
+        QWidget::setTabOrder(pushButton, pushButton_2);
 
         retranslateUi(LoginForm);
 
