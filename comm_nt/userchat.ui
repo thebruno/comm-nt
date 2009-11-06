@@ -55,7 +55,7 @@
      <string>PushButton</string>
     </property>
    </widget>
-   <widget class="QTextEdit" name="textEdit">
+   <widget class="QTextEdit" name="txtChatHistory">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -65,7 +65,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QPlainTextEdit" name="plainTextEdit">
+   <widget class="QPlainTextEdit" name="txtPlainChat">
     <property name="geometry">
      <rect>
       <x>10</x>
