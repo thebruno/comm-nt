@@ -9,7 +9,7 @@ Chat::Chat(Group &receivers, QWidget *parent) :
     m_ui->setupUi(this);
     Receivers = receivers;
     std::list<User>::iterator it;
-    std::string title = "Chat with: ";
+    std::string title = "Chat members: ";
     for (it = Receivers.GroupMembers.begin(); it != Receivers.GroupMembers.end(); ++it) {
         title.append((*it).Login).append(", ");
 
@@ -72,4 +72,13 @@ void Chat::FillMessage(std::string sender, std::string created, std::string text
 
 Group Chat::GetReceivers(){
     return Receivers;
+}
+void Chat::showAndPosition(QWidget * parent) {
+    QRect r = parent->geometry();
+    if (!this->isVisible()) {
+        int centerX = r.left() + r.width() / 2;
+        int centerY = r.top() + r.height() / 2;
+        this->setGeometry(centerX - this->width()/2, centerY - this->height() / 2, 0, 0);
+    }
+    this->show();
 }

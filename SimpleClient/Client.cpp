@@ -73,7 +73,7 @@ void Client::DoReceiving(){
 			Result result = Receive(m);		
 			if (result != OK)
 				break;
-			std::cout << "Received: " << m.ToString() << " from user: " << m.Sender.ToString() << std::endl;
+			std::cout << "Received messsage from user: " << m.Sender.ToString('@') << std::endl;
 			InputMsgsAccess->Wait();
 			InputMsgs.push_back(m);
 			InputMsgsAccess->Release();

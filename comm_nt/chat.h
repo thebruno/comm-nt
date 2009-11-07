@@ -18,6 +18,7 @@ public:
     void FillMessage(Message& m);
     void FillMessage(std::string sender, std::string created, std::string text);
     Group GetReceivers();
+    void showAndPosition(QWidget * parent);
 protected:
     void changeEvent(QEvent *e);
 

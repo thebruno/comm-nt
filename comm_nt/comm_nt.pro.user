@@ -38,7 +38,7 @@
  </data>
  <data>
   <variable>activebuildconfiguration</variable>
-  <value type="QString" >Debug</value>
+  <value type="QString" >Release</value>
  </data>
  <data>
   <variable>buildConfiguration-Debug</variable>
@@ -263,7 +263,7 @@
     <value type="QString" >CONFIG+=release</value>
    </valuelist>
    <value key="abstractProcess.command" type="QString" >C:/qt/qt/bin/qmake.exe</value>
-   <value key="abstractProcess.enabled" type="bool" >true</value>
+   <value key="abstractProcess.enabled" type="bool" >false</value>
    <value key="abstractProcess.workingDirectory" type="QString" >D:/Programming/PolSl/NT i Unix/nt/comm-nt/comm_nt</value>
    <value key="buildConfiguration" type="int" >0</value>
   </valuemap>

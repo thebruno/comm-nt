@@ -73,7 +73,7 @@ void Server::DoReceiving(Socket *userSocket){
 			InputMsgsAccess->Wait();
 			InputMsgs.push_back(m);
 			InputMsgsAccess->Release();
-			std::cout << "User: " << u.ToString() << " has logged in." << std::endl;
+			std::cout << "User: " << u.ToString('@') << " has logged in." << std::endl;
 		}
 	} else {
 		std::cout << "Wrong message type." << std::endl;
@@ -92,7 +92,7 @@ void Server::DoReceiving(Socket *userSocket){
 			Result result = Receive(m, userSocket);		
 			if (result != OK)
 				break;
-			std::cout << "Received: " << m.ToString() << " from user: " << u.ToString() << std::endl;
+			std::cout << "Received message from user: " << u.ToString('@') << std::endl;
 			InputMsgsAccess->Wait();
 			InputMsgs.push_back(m);
 			InputMsgsAccess->Release();
@@ -104,7 +104,7 @@ void Server::DoReceiving(Socket *userSocket){
 	// clean up
 	DataAccess->Wait();
 	RemoveUser(u);
-	std::cout << "User: " << u.ToString() << " disconnected." << std::endl;
+	std::cout << "User: " << u.ToString('@') << " disconnected." << std::endl;
 	DataAccess->Release();
 	// emulowanie roz³¹czenia tak jakby user przys³a³, ¿e siê roz³¹czy³
 	InputMsgsAccess->Wait();	
@@ -233,6 +233,7 @@ void Server::Start(){
 
 		HandlerThread->Start();
 		ListenerThread->Start();
+		std::cout << "Server successfully started at address:"  << GetHostName("localhost") << ", port: "<< Port << ", max connections: " << MaxConnections << std::endl;
 	} else 
 		std::cout << "Server already started." << std::endl;
 }
@@ -268,6 +269,7 @@ void Server::Stop(){
 		delete InputMsgsAccess;
 		delete OutputMsgsAccess;
 		delete DataAccess;
+		std::cout << "Server successfully stopped." << std::endl;
 	} else 
 		std::cout << "Server already stopped." << std::endl;
 }
@@ -325,7 +327,7 @@ void Server::RemoveUser(User &u){
 	}	
 	SysThread * toDelete;
 	std::map<std::string, SysThread*>::iterator mit;
-	for(mit = ReceiverThreads.begin(); mit !=ReceiverThreads.end(); )
+	for(mit = ReceiverThreads.begin(); mit != ReceiverThreads.end(); )
 	{
 		if(mit->first == key) {
 			toDelete = mit->second;

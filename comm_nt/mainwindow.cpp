@@ -144,7 +144,7 @@ void MainWindow::DoHandling(){
 
                 }
                 ChatWindows[m.Sender.ToString()]->FillMessage(m);
-                ChatWindows[m.Sender.ToString()]->show();
+                ChatWindows[m.Sender.ToString()]->showAndPosition(this);
                 ChatWindows[m.Sender.ToString()]->raise();
                 ChatWindows[m.Sender.ToString()]->activateWindow();
                 Communicator->DataAccess->Release();
@@ -156,6 +156,17 @@ void MainWindow::DoHandling(){
                 // check if windw exists
                 // if not create it
                 // activate it and fill with message
+                 Communicator->DataAccess->Wait();
+                if (!ChatWindowEsists(m.InvolvedGroup)) {
+                    m.InvolvedGroup.GroupMembers.sort();
+                    ChatWindows[m.InvolvedGroup.ToString()] = new Chat(m.InvolvedGroup, this);
+
+                }
+                ChatWindows[m.InvolvedGroup.ToString()]->FillMessage(m);
+                ChatWindows[m.InvolvedGroup.ToString()]->showAndPosition(this);
+                ChatWindows[m.InvolvedGroup.ToString()]->raise();
+                ChatWindows[m.InvolvedGroup.ToString()]->activateWindow();
+                Communicator->DataAccess->Release();
                 std::cout << "Group Message: " << m.ToString() << std::endl;
                 break;
         }
@@ -238,11 +249,14 @@ void MainWindow::on_btnStartChat_clicked()
                 return;
             }
         }
-
+        // add me for involved group
+        selectedUsers.GroupMembers.push_back(WhoAmI());
+        selectedUsers.GroupMembers.sort();
         if (!ChatWindowEsists(selectedUsers)) {
             ChatWindows[selectedUsers.ToString()] = new Chat(selectedUsers, this );
         }
-        ChatWindows[selectedUsers.ToString()]->show();
+
+        ChatWindows[selectedUsers.ToString()]->showAndPosition(this);
         ChatWindows[selectedUsers.ToString()]->raise();
         ChatWindows[selectedUsers.ToString()]->activateWindow();
         Communicator->DataAccess->Release();
@@ -251,10 +265,10 @@ void MainWindow::on_btnStartChat_clicked()
 
 void MainWindow::CloseAllWindows(){
     std::map<std::string, Chat *>::iterator it;
-    for (it = ChatWindows.begin(); it != ChatWindows.end(); ++it) {
+    for (it = ChatWindows.begin(); it != ChatWindows.end(); ) {
         (*it).second->close();
         delete (*it).second;
-        ChatWindows.erase(it);
+        ChatWindows.erase(it++);
     }
 }
 bool MainWindow::ChatWindowEsists(Group & g){
@@ -284,8 +298,6 @@ void MainWindow::SendMsgFromGUI(Group receivers, std::string msg){
         if (receivers.GroupMembers.size() == 1)
             Communicator->SendToUser(receivers.GroupMembers.front(), msg);
         else if (receivers.GroupMembers.size() > 1){
-            Group temp(receivers.GroupMembers);
-            temp.GroupMembers.push_back(Communicator->Me);
             //TODO: check if this is right
             Communicator->SendToGroup(receivers.GroupMembers, msg);
         }

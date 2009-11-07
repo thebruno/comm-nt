@@ -64,7 +64,6 @@ int _tmain(int argc, _TCHAR* argv[]){
 	std::cout << "Starting server..." << std::endl;
 	try{
 		Server * s = new Server(port, maxConnections);
-		std::cout << "Server started at address:"  << GetHostName("localhost") << ", port: "<< port << ", max connections: " << maxConnections << std::endl;
 		std::cout << "\nAvailable commands:\nq - stop and quit server\nstart - start server\nstop - stop server\nusers - print currently logged users\n" <<std::endl;
 		
 		std::string temp;
