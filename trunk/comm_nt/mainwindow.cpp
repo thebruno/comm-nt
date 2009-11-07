@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "userchat.h"
+#include "chat.h"
 #include <windows.h>
 #include <QListWidgetItem>
 
@@ -96,6 +96,7 @@ void MainWindow::DoHandling(){
                     if (m.PreviousResult == OK) {
                         Communicator->DataAccess->Wait();
                         Communicator->Me = m.Receiver;
+                        ui->statusBar->showMessage(QString("Currently logged as: ").append(QString(Communicator->Me.Login.c_str())));
                         Communicator->IsLogged = true;
                         Communicator->DataAccess->Release();
 
@@ -130,16 +131,16 @@ void MainWindow::DoHandling(){
                 // activate it and fill with message
 
                 Communicator->DataAccess->Wait();
-                if (!ChatWindowEsists(m.Receiver)) {
+                if (!ChatWindowEsists(m.Sender)) {
                     Group g;
-                    g.GroupMembers.push_back(m.Receiver);
-                    ChatWindows[m.Receiver.ToString()] = new UserChat(0, this, g);
+                    g.GroupMembers.push_back(m.Sender);
+                    ChatWindows[m.Sender.ToString()] = new Chat(g, this);
 
                 }
-                ChatWindows[m.Receiver.ToString()]->FillMessage(m);
-                ChatWindows[m.Receiver.ToString()]->show();
-                ChatWindows[m.Receiver.ToString()]->raise();
-                ChatWindows[m.Receiver.ToString()]->activateWindow();
+                ChatWindows[m.Sender.ToString()]->FillMessage(m);
+                ChatWindows[m.Sender.ToString()]->show();
+                ChatWindows[m.Sender.ToString()]->raise();
+                ChatWindows[m.Sender.ToString()]->activateWindow();
                 Communicator->DataAccess->Release();
                 std::cout << "Message: " << m.ToString() << std::endl;
                 break;
@@ -185,10 +186,16 @@ void MainWindow::on_btnStartChat_clicked()
             }
             selectedUsers.GroupMembers.push_back(*uit);
         }
+        for (uit = selectedUsers.GroupMembers.begin(); uit != selectedUsers.GroupMembers.end(); ++uit) {
+            if (*uit == Communicator->Me) {
+                Communicator->DataAccess->Release();
+                QMessageBox::warning(this, QString("Error"), QString("You cannot chat with yourself!"), QMessageBox::Ok,QMessageBox::NoButton);
+                return;
+            }
+        }
+
         if (!ChatWindowEsists(selectedUsers)) {
-
-            ChatWindows[selectedUsers.ToString()] = new UserChat(0, this, selectedUsers);
-
+            ChatWindows[selectedUsers.ToString()] = new Chat(selectedUsers, this );
         }
         ChatWindows[selectedUsers.ToString()]->show();
         ChatWindows[selectedUsers.ToString()]->raise();
@@ -198,7 +205,7 @@ void MainWindow::on_btnStartChat_clicked()
 }
 
 void MainWindow::CloseAllWindows(){
-    std::map<std::string, UserChat *>::iterator it;
+    std::map<std::string, Chat *>::iterator it;
     for (it = ChatWindows.begin(); it != ChatWindows.end(); ++it) {
         (*it).second->close();
         //delete (*it).second;
@@ -206,7 +213,7 @@ void MainWindow::CloseAllWindows(){
     }
 }
 bool MainWindow::ChatWindowEsists(Group & g){
-    std::map<std::string, UserChat *>::iterator it;
+    std::map<std::string, Chat *>::iterator it;
     std::string key = g.ToString();
     for (it = ChatWindows.begin(); it != ChatWindows.end(); ++it) {
         if ((*it).first == key)
@@ -217,7 +224,7 @@ bool MainWindow::ChatWindowEsists(Group & g){
 
 
 bool MainWindow::ChatWindowEsists(User & u){
-    std::map<std::string, UserChat *>::iterator it;
+    std::map<std::string, Chat *>::iterator it;
     std::string key = u.ToString();
     for (it = ChatWindows.begin(); it != ChatWindows.end(); ++it) {
         if ((*it).first == key)
@@ -231,7 +238,17 @@ void MainWindow::SendMsgFromGUI(Group receivers, std::string msg){
     if (Communicator != 0 && Communicator->IsConnected && Communicator->IsLogged) {
         if (receivers.GroupMembers.size() == 1)
             Communicator->SendToUser(receivers.GroupMembers.front(), msg);
-        else if (receivers.GroupMembers.size() > 1)
+        else if (receivers.GroupMembers.size() > 1){
+            Group temp(receivers.GroupMembers);
+            temp.GroupMembers.push_back(Communicator->Me);
+            //TODO: check if this is right
             Communicator->SendToGroup(receivers.GroupMembers, msg);
+        }
     }
+}
+User MainWindow::WhoAmI(){
+    if (Communicator != 0 && Communicator->IsConnected && Communicator->IsLogged)
+        return Communicator->Me;
+    else
+        return User();
 }

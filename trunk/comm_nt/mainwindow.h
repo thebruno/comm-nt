@@ -3,7 +3,7 @@
 
 #include <QtGui/QMainWindow>
 #include <QMessageBox>
-#include "userchat.h"
+#include "chat.h"
 #include "Client.h"
 #include "loginform.h"
 
@@ -27,13 +27,14 @@ public:
     bool ChatWindowEsists(Group & g);
     bool ChatWindowEsists(User & u);
     void SendMsgFromGUI(Group receivers, std::string msg);
+    User WhoAmI();
 public slots:
     void MessageReceived();
 private:
     void DoHandling();
-    std::map<std::string, UserChat *> ChatWindows;
-    Client * Communicator;
+    std::map<std::string, Chat *> ChatWindows;    
     void HandleUserList();
+    Client * Communicator;
 private slots:
     void on_btnStartChat_clicked();
     void on_actionDisconnect_triggered();

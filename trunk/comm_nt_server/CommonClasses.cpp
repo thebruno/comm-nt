@@ -106,21 +106,18 @@ Result User::Parse(std::string& s) {
 }
 
 bool User::operator==(const User& u) const {
-	if (u.Login == this->Login && u.IP == this->IP)
-		return true;
-	else 
-		return false;
+    if (u.Login == this->Login && u.IP == this->IP)
+            return true;
+    else
+            return false;
 
 }
 
 // sortby user login
-int User::operator<(const User & u2) const {
-        if (this->Login == u2.Login)
-                return 0;
-        else if (this->Login < u2.Login)
-            return -1;
-        else
-            return 1;
+bool User::operator<(const User & u2) const {
+    if (this->Login < u2.Login)
+        return true;
+    return false;
 }
 
 std::string Group::ToString(){

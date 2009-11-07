@@ -1,32 +1,32 @@
-#ifndef USERCHAT_H
-#define USERCHAT_H
+#ifndef CHAT_H
+#define CHAT_H
 
-#include <QtGui/QWidget>
+#include <QtGui/QMainWindow>
 #include "CommonClasses.h"
 
 namespace Ui {
-    class UserChat;
+    class Chat;
 }
 class MainWindow;
 
-class UserChat : public QWidget {
+class Chat : public QMainWindow {
     Q_OBJECT
 public:
-    UserChat(QWidget *parent, QWidget *main, Group & receivers);
-    ~UserChat();
+    Chat(Group & receivers, QWidget *parent = 0);
+    ~Chat();
     MainWindow * Main;
     void FillMessage(Message& m);
+    void FillMessage(std::string sender, std::string created, std::string text);
 
 protected:
     void changeEvent(QEvent *e);
 
 private:
-    Ui::UserChat *m_ui;
+    Ui::Chat *m_ui;
     Group Receivers;
-
 private slots:
     void on_btnClose_clicked();
     void on_btnSend_clicked();
 };
 
-#endif // USERCHAT_H
+#endif // CHAT_H
