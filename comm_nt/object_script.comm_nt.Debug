@@ -1,7 +1,6 @@
 INPUT(
 ./debug\main.o
 ./debug\mainwindow.o
-./debug\userchat.o
 ./debug\ReceiverThread.o
 ./debug\Utilities.o
 ./debug\stdafx.o
@@ -9,9 +8,10 @@ INPUT(
 ./debug\CommonClasses.o
 ./debug\Client.o
 ./debug\loginform.o
+./debug\chat.o
 ./debug\moc_mainwindow.o
-./debug\moc_userchat.o
 ./debug\moc_ReceiverThread.o
 ./debug\moc_loginform.o
+./debug\moc_chat.o
 ./debug\qrc_resources.o
 );
