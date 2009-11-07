@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
     LogIn = new LoginForm(this );
     Communicator = 0;
     ui->listUsers->setSelectionMode(QAbstractItemView::MultiSelection );
+    HandleUserList();
 }
 
 void MainWindow::MessageReceived(){
@@ -27,21 +28,18 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionExit_triggered()
 {
-    //CloseAllWindows();
+    on_actionDisconnect_triggered();
     this->close();
 }
 
 void MainWindow::on_actionAbout_triggered()
 {
-
+    QMessageBox::information(this, QString("About..."), QString("Communicator 1.0 for Windows NT.\nWritten by Konrad Ba³ys inf9, OS2, POLŒL PL."), QMessageBox::Ok, QMessageBox::NoButton);
 }
 
 void MainWindow::on_actionConnect_triggered()
 {
-    if (Communicator != 0) {
-        delete Communicator;
-        Communicator = 0;
-    }
+    on_actionDisconnect_triggered();
 
     if (Communicator == 0) {
 
@@ -50,7 +48,7 @@ void MainWindow::on_actionConnect_triggered()
                 Communicator = new Client(LogIn->Host, LogIn->Port, true);
 
             } catch (SocketException s) {
-                QMessageBox::warning(this, QString("Error"), QString("Cannoct connect to server!"), QMessageBox::Ok,QMessageBox::Close);
+                QMessageBox::warning(this, QString("Error"), QString("Cannoct connect to server!"), QMessageBox::Ok,QMessageBox::NoButton);
                 return;
             }
             try {
@@ -68,7 +66,14 @@ void MainWindow::on_actionConnect_triggered()
 
 void MainWindow::on_actionDisconnect_triggered()
 {
-
+    if (Communicator != 0) {
+        Communicator->LogOut();
+        Communicator->Disconnect();
+        delete Communicator;
+        Communicator = 0;
+        HandleUserList();
+        HandleUserWindows();
+    }
 }
 
 void MainWindow::DoHandling(){  
@@ -93,13 +98,13 @@ void MainWindow::DoHandling(){
             std::cout << "Result: " << m.ToString() << std::endl;
             switch (m.PreviousOperation){
                 case LOGIN: {
+                    //QMessageBox::information(this, QString("Result"), QString(), QMessageBox::Ok, QMessageBox::NoButton);
                     if (m.PreviousResult == OK) {
                         Communicator->DataAccess->Wait();
-                        Communicator->Me = m.Receiver;
-                        ui->statusBar->showMessage(QString("Currently logged as: ").append(QString(Communicator->Me.Login.c_str())));
+                        Communicator->Me = m.Receiver;                        
                         Communicator->IsLogged = true;
                         Communicator->DataAccess->Release();
-
+                        HandleUserList();
                     } else if(m.PreviousResult == FAILED) {
                         ; //actually nothing to do
                     }
@@ -119,9 +124,10 @@ void MainWindow::DoHandling(){
             Communicator->Users = m.InvolvedGroup.GroupMembers;
             Communicator->Users.sort();
             HandleUserList();
+            HandleUserWindows();
             //TODO: close windows now not used
-            //HandleUserWindows();
             Communicator->DataAccess->Release();
+            //QMessageBox::information(this, QString("UserList"), QString(), QMessageBox::Ok, QMessageBox::NoButton);
             break;
         }
         case MESSAGE: {
@@ -162,12 +168,47 @@ void MainWindow::DoHandling(){
 // odpalaæ w semaforach
 void MainWindow::HandleUserList()
 {   
-    QIcon  icon = QIcon(QString(":/icons/user.ico"));
-    ui->listUsers->clear();
-    std::list<User>::iterator it;
-    int i = 0;
-    for (it = Communicator->Users.begin(); it != Communicator->Users.end(); ++it, i++) {
-        new QListWidgetItem(icon, QString(it->Login.c_str()), ui->listUsers, i);
+    if (Communicator != 0 && Communicator->IsConnected && Communicator->IsLogged) {
+        QIcon  icon = QIcon(QString(":/icons/user.ico"));
+        ui->listUsers->clear();
+        std::list<User>::iterator it;
+        int i = 0;
+        for (it = Communicator->Users.begin(); it != Communicator->Users.end(); ++it, i++) {
+            new QListWidgetItem(icon, QString(it->Login.c_str()), ui->listUsers, i);
+        }
+        ui->lblStatus->setText(QString("Currently logged as: ").append(QString(Communicator->Me.Login.c_str())));
+    }
+    else {
+        ui->listUsers->clear();
+        ui->lblStatus->setText((QString("You are not logged.")));
+    }
+}
+
+void MainWindow::HandleUserWindows (){
+    if (Communicator == 0 || !Communicator->IsConnected || !Communicator->IsLogged) {
+        // close all windows
+        CloseAllWindows();
+    } else {
+        std::map<std::string, Chat *>::iterator it;
+        std::list<User>::iterator uit;
+        bool found = false;
+        for (it = ChatWindows.begin(); it != ChatWindows.end(); ) {
+            found = false;
+            Group temp = (*it).second->GetReceivers();
+            for (uit = temp.GroupMembers.begin(); uit != temp.GroupMembers.end(); ++uit) {
+                // remove windows, from which any user disappeared
+                if (!Communicator->IsUserLogged(*uit)){
+                    //(*it).second->close();
+                    delete (*it).second;
+                    ChatWindows.erase(it++);
+                    // iterator has been invalidated
+                    found = true;
+                    break;
+                }
+            }
+            if (!found)
+                ++it;
+        }
     }
 }
 
@@ -176,6 +217,10 @@ void MainWindow::on_btnStartChat_clicked()
     if (Communicator != 0 && Communicator->IsConnected && Communicator->IsLogged) {
         Communicator->DataAccess->Wait();
         QList<QListWidgetItem*> temp = ui->listUsers->selectedItems();
+        if (temp.size() == 0) {
+            QMessageBox::information(this, QString("Information"), QString("Please select at least one user to chat with."), QMessageBox::Ok,QMessageBox::NoButton);
+            return;
+        }
         Group selectedUsers;
         QList<QListWidgetItem*>::iterator it;
         std::list<User>::iterator uit;
@@ -208,7 +253,7 @@ void MainWindow::CloseAllWindows(){
     std::map<std::string, Chat *>::iterator it;
     for (it = ChatWindows.begin(); it != ChatWindows.end(); ++it) {
         (*it).second->close();
-        //delete (*it).second;
+        delete (*it).second;
         ChatWindows.erase(it);
     }
 }

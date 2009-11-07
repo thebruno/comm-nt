@@ -5,7 +5,7 @@
 
 
 class Serializable{
-	virtual std::string ToString() = 0;
+	virtual std::string ToString(char separator) = 0;
 	virtual Result Parse(std::string &s) = 0;
 };
 
@@ -50,7 +50,7 @@ struct User : public Serializable{
 	User(std::string login, std::string ip);
 	User();
         virtual ~User();
-	virtual std::string ToString();
+	virtual std::string ToString(char separator = MESSAGE_USER_SEPARATOR);
 	virtual Result Parse(std::string &object);
 	bool operator==(const User & u2) const;
         bool operator<(const User & u2) const;
@@ -61,8 +61,8 @@ struct Group: public Serializable{
 	std::list<User > GroupMembers;
 	Group(std::list<User> &u);
 	Group();
-        virtual ~Group();
-	virtual std::string ToString();
+    virtual ~Group();
+	virtual std::string ToString(char separator = MESSAGE_GROUP_USER_SEPARATOR);
 	virtual Result Parse(std::string &object);
 	bool operator==(const Group & u1) const;
 };
@@ -80,8 +80,8 @@ struct Message: public Serializable {
 	Message(MessageType type, std::string created, User sender, User receiver, Group involvedGroup, std::string text);
 	Message(MessageType type, std::string created, User receiver, MessageType previousOperation, Result previousResult, std::string previusOperationInfo);
 	Message();
-        virtual ~Message();
-	virtual std::string ToString();
+    virtual ~Message();
+	virtual std::string ToString(char separator = MESSAGE_SEPARATOR);
 	virtual Result Parse(std::string &object);
 };
 

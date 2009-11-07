@@ -120,8 +120,8 @@ void Server::DoHandling(){
 		NewMessage->Wait();
 		// get message
 		InputMsgsAccess->Wait();
-		Message m = InputMsgs.back();
-		InputMsgs.pop_back();
+		Message m = InputMsgs.front();
+		InputMsgs.pop_front();
 		InputMsgsAccess->Release();
 		DataAccess->Wait();
 		// handle
@@ -130,13 +130,14 @@ void Server::DoHandling(){
 			// user has already been added, map his/her thread only
 			MapThreadToUser(m.Sender);
 			Message newMessage;
+			newMessage = Message(RESULT, DateTimeNow(), m.Sender, LOGIN, OK, "You have logged in successfully");
+			this->Send(newMessage);
 			// send all users list to all users
 			for (uIt = Users.begin(); uIt != Users.end(); ++uIt) {
 				newMessage = Message(USERLIST, DateTimeNow(), User(), *uIt, Group(Users), "");
 				this->Send(newMessage);
 			}
-			newMessage = Message(RESULT, DateTimeNow(), m.Sender, LOGIN, OK, "You have logged in successfully");
-			this->Send(newMessage);
+			
 			break;
 		}
 		case LOGOUT: {
@@ -151,7 +152,10 @@ void Server::DoHandling(){
 		}
 		case RESULT: {
 			// send it to user
-			this->Send(m);
+			if (IsUserLogged(m.Receiver))
+				this->Send(m);
+			else 
+				std::cout << "User: " << m.Receiver.Login << " is not available!" << std::endl;
 			break;
 		}
 		case USERLIST: {
@@ -160,11 +164,15 @@ void Server::DoHandling(){
 		}
 		case MESSAGE: {
 			// send it to user
-			this->Send(m);
+			if (IsUserLogged(m.Receiver))
+				this->Send(m);
+			else 
+				std::cout << "User: " << m.Receiver.Login << " is not available!" << std::endl;
 			break;
 		}
 		case GROUPMESSAGE: {
 			// create group if it has not yet been created.
+			// are groups really necessary?
 			if (IsGroupCreated(m.InvolvedGroup) == false)
 				Groups.push_back(m.InvolvedGroup);
 			// send to all users (without sender)
@@ -225,7 +233,8 @@ void Server::Start(){
 
 		HandlerThread->Start();
 		ListenerThread->Start();
-	}
+	} else 
+		std::cout << "Server already started." << std::endl;
 }
 
 void Server::Stop(){
@@ -259,7 +268,8 @@ void Server::Stop(){
 		delete InputMsgsAccess;
 		delete OutputMsgsAccess;
 		delete DataAccess;
-	}
+	} else 
+		std::cout << "Server already stopped." << std::endl;
 }
 
 bool Server::IsUserLogged(User &u) {
@@ -315,7 +325,7 @@ void Server::RemoveUser(User &u){
 	}	
 	SysThread * toDelete;
 	std::map<std::string, SysThread*>::iterator mit;
-	for(mit=ReceiverThreads.begin(); mit !=ReceiverThreads.end(); )
+	for(mit = ReceiverThreads.begin(); mit !=ReceiverThreads.end(); )
 	{
 		if(mit->first == key) {
 			toDelete = mit->second;
