@@ -8,12 +8,23 @@ Chat::Chat(Group &receivers, QWidget *parent) :
 {
     m_ui->setupUi(this);
     Receivers = receivers;
-    Main = static_cast<MainWindow*>(parent);
+    std::list<User>::iterator it;
+    std::string title = "Chat with: ";
+    for (it = Receivers.GroupMembers.begin(); it != Receivers.GroupMembers.end(); ++it) {
+        title.append((*it).Login).append(", ");
+
+    }
+    title = title.substr(0, title.size() - 2);
+    m_ui->grBoxChatWith->setTitle(QString(title.c_str()));
+    Main = static_cast<MainWindow*>(parent);    
+    m_ui->txtPlainChat->setFocus();
+    //this->setAttribute(Qt::WA_DeleteOnClose, true);
 }
 
 Chat::~Chat()
 {
     delete m_ui;
+
 }
 
 void Chat::changeEvent(QEvent *e)
@@ -31,10 +42,12 @@ void Chat::changeEvent(QEvent *e)
 
 void Chat::on_btnSend_clicked()
 {
-    //TODO: dodaæ sprawdzenie po³¹czenia (Communicator not null, connected and logged, semafor wzi¹æ
-    FillMessage(Main->WhoAmI().Login, DateTimeNow(),  m_ui->txtPlainChat->toPlainText().toStdString());
-    Main->SendMsgFromGUI(Receivers, m_ui->txtPlainChat->toPlainText().toStdString());
-    m_ui->txtPlainChat->clear();
+    if (m_ui->txtPlainChat->toPlainText().toStdString().size() != 0){
+        //TODO: dodaæ sprawdzenie po³¹czenia (Communicator not null, connected and logged, semafor wzi¹æ
+        FillMessage(Main->WhoAmI().Login, DateTimeNow(),  m_ui->txtPlainChat->toPlainText().toStdString());
+        Main->SendMsgFromGUI(Receivers, m_ui->txtPlainChat->toPlainText().toStdString());
+        m_ui->txtPlainChat->clear();
+    }
 }
 
 void Chat::on_btnClose_clicked()
@@ -54,4 +67,9 @@ void Chat::FillMessage(std::string sender, std::string created, std::string text
     temp.append("<B><FONT COLOR=\"BLACK\">").append(sender).append(": ").append(created).append("</FONT></B>");
     m_ui->txtChatHistory->append(QString(temp.c_str()));
     m_ui->txtChatHistory->append(QString(text.c_str()));
+}
+
+
+Group Chat::GetReceivers(){
+    return Receivers;
 }

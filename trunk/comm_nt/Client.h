@@ -42,7 +42,7 @@ class Client {
 	static unsigned long __stdcall SenderFunction(void *c);
 
 public:
-	
+        bool IsUserLogged(User &u);
         ReceiverThread * QTReceiverThread;
 	Client();
 	~Client();

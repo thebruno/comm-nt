@@ -85,13 +85,14 @@ User::User(){
 User::~User() {
 }
 
-std::string User::ToString() {
+std::string User::ToString(char separator) {
 	std::string toReturn;
 	toReturn.append(this->Login);
-	toReturn += MESSAGE_USER_SEPARATOR;
+	toReturn += separator;
 	toReturn.append(this->IP);
 	return toReturn;
 }
+
 
 Result User::Parse(std::string& s) {
 	std::vector<std::string> splitString = split(s, MESSAGE_USER_SEPARATOR);
@@ -120,12 +121,12 @@ bool User::operator<(const User & u2) const {
     return false;
 }
 
-std::string Group::ToString(){
+std::string Group::ToString(char separator){
 	std::string toReturn;
 	std::list<User>::iterator it;
 	for (it = GroupMembers.begin(); it != GroupMembers.end(); it++) {
 		toReturn.append((*it).ToString());
-		toReturn += MESSAGE_GROUP_USER_SEPARATOR;
+		toReturn += separator;
 	}
 	toReturn = toReturn.substr(0, toReturn.size() - 1);
 	return toReturn;
@@ -198,7 +199,7 @@ Message::Message():Type(MESSAGETYPE_NOTSET), PreviousOperation (MESSAGETYPE_NOTS
 }
 Message::~Message() {}
 
-std::string Message::ToString(){
+std::string Message::ToString(char separator){
 	std::string toReturn;
 	toReturn.append(::ToString(Type));
 	toReturn += MESSAGE_SEPARATOR;
@@ -206,49 +207,49 @@ std::string Message::ToString(){
 		case LOGIN: 
 		case LOGOUT: {
 			toReturn.append(Created);
-			toReturn += MESSAGE_SEPARATOR;
+			toReturn += separator;
 			toReturn.append(Sender.ToString());		
 			break;
 		}
 		case RESULT: {
 			toReturn.append(Created);
-			toReturn += MESSAGE_SEPARATOR;
+			toReturn += separator;
 			toReturn.append(Receiver.ToString());
-			toReturn += MESSAGE_SEPARATOR;
+			toReturn += separator;
 			toReturn.append(::ToString(PreviousOperation));
-			toReturn += MESSAGE_SEPARATOR;
+			toReturn += separator;
 			toReturn.append(::ToString(PreviousResult));
-			toReturn += MESSAGE_SEPARATOR;
+			toReturn += separator;
 			toReturn.append(PreviusOperationInfo);
 			break;
 		}
 		case USERLIST: {
 			toReturn.append(Created);
-			toReturn += MESSAGE_SEPARATOR;
+			toReturn += separator;
 			toReturn.append(Receiver.ToString());
-			toReturn += MESSAGE_SEPARATOR;
+			toReturn += separator;
 			toReturn.append(InvolvedGroup.ToString());
 			break;
 		}
 		case MESSAGE: {
 			toReturn.append(Created);
-			toReturn += MESSAGE_SEPARATOR;
+			toReturn += separator;
 			toReturn.append(Sender.ToString());
-			toReturn += MESSAGE_SEPARATOR;
+			toReturn += separator;
 			toReturn.append(Receiver.ToString());
-			toReturn += MESSAGE_SEPARATOR;
+			toReturn += separator;
 			toReturn.append(Text);
 			break;
 		}
 		case GROUPMESSAGE: {
 			toReturn.append(Created);
-			toReturn += MESSAGE_SEPARATOR;
+			toReturn += separator;
 			toReturn.append(Sender.ToString());
-			toReturn += MESSAGE_SEPARATOR;
+			toReturn += separator;
 			//toReturn.append(Receiver.ToString());
 			//toReturn += MESSAGE_SEPARATOR;
 			toReturn.append(InvolvedGroup.ToString());
-			toReturn += MESSAGE_SEPARATOR;
+			toReturn += separator;
 			toReturn.append(Text);
 			break;
 		}

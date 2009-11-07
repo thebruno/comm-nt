@@ -34,6 +34,7 @@ private:
     void DoHandling();
     std::map<std::string, Chat *> ChatWindows;    
     void HandleUserList();
+    void HandleUserWindows();
     Client * Communicator;
 private slots:
     void on_btnStartChat_clicked();

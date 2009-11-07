@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'mainwindow.ui'
 **
-** Created: Sat 7. Nov 00:12:08 2009
+** Created: Sat 7. Nov 14:01:38 2009
 **      by: Qt User Interface Compiler version 4.5.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -16,13 +16,13 @@
 #include <QtGui/QButtonGroup>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QHeaderView>
+#include <QtGui/QLabel>
 #include <QtGui/QListWidget>
 #include <QtGui/QMainWindow>
 #include <QtGui/QMenu>
 #include <QtGui/QMenuBar>
 #include <QtGui/QPushButton>
 #include <QtGui/QSpacerItem>
-#include <QtGui/QStatusBar>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QWidget>
 
@@ -43,22 +43,28 @@ public:
     QSpacerItem *horizontalSpacer;
     QPushButton *btnStartChat;
     QSpacerItem *horizontalSpacer_2;
+    QLabel *lblStatus;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QMenu *menuHelp;
-    QStatusBar *statusBar;
 
     void setupUi(QMainWindow *MainWindow)
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
         MainWindow->resize(262, 400);
+        QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(MainWindow->sizePolicy().hasHeightForWidth());
+        MainWindow->setSizePolicy(sizePolicy);
         MainWindow->setMinimumSize(QSize(262, 400));
         MainWindow->setMaximumSize(QSize(262, 400));
+        MainWindow->setContextMenuPolicy(Qt::NoContextMenu);
         QIcon icon;
         icon.addFile(QString::fromUtf8(":/icons/chat2.ico"), QSize(), QIcon::Normal, QIcon::Off);
         MainWindow->setWindowIcon(icon);
-        MainWindow->setIconSize(QSize(48, 48));
+        MainWindow->setUnifiedTitleAndToolBarOnMac(true);
         actionExit = new QAction(MainWindow);
         actionExit->setObjectName(QString::fromUtf8("actionExit"));
         QIcon icon1;
@@ -83,7 +89,7 @@ public:
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         verticalLayoutWidget = new QWidget(centralWidget);
         verticalLayoutWidget->setObjectName(QString::fromUtf8("verticalLayoutWidget"));
-        verticalLayoutWidget->setGeometry(QRect(0, 10, 261, 331));
+        verticalLayoutWidget->setGeometry(QRect(0, 10, 261, 351));
         verticalLayout = new QVBoxLayout(verticalLayoutWidget);
         verticalLayout->setSpacing(6);
         verticalLayout->setMargin(11);
@@ -104,6 +110,9 @@ public:
         btnStartChat = new QPushButton(verticalLayoutWidget);
         btnStartChat->setObjectName(QString::fromUtf8("btnStartChat"));
         btnStartChat->setIcon(icon);
+        btnStartChat->setAutoDefault(true);
+        btnStartChat->setDefault(true);
+        btnStartChat->setFlat(false);
 
         horizontalLayout->addWidget(btnStartChat);
 
@@ -114,6 +123,9 @@ public:
 
         verticalLayout->addLayout(horizontalLayout);
 
+        lblStatus = new QLabel(centralWidget);
+        lblStatus->setObjectName(QString::fromUtf8("lblStatus"));
+        lblStatus->setGeometry(QRect(10, 360, 241, 20));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
@@ -123,9 +135,6 @@ public:
         menuHelp = new QMenu(menuBar);
         menuHelp->setObjectName(QString::fromUtf8("menuHelp"));
         MainWindow->setMenuBar(menuBar);
-        statusBar = new QStatusBar(MainWindow);
-        statusBar->setObjectName(QString::fromUtf8("statusBar"));
-        MainWindow->setStatusBar(statusBar);
 
         menuBar->addAction(menuFile->menuAction());
         menuBar->addAction(menuHelp->menuAction());
@@ -147,6 +156,7 @@ public:
         actionConnect->setText(QApplication::translate("MainWindow", "Connect", 0, QApplication::UnicodeUTF8));
         actionDisconnect->setText(QApplication::translate("MainWindow", "Disconnect", 0, QApplication::UnicodeUTF8));
         btnStartChat->setText(QApplication::translate("MainWindow", "Chat", 0, QApplication::UnicodeUTF8));
+        lblStatus->setText(QString());
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0, QApplication::UnicodeUTF8));
         menuHelp->setTitle(QApplication::translate("MainWindow", "Help", 0, QApplication::UnicodeUTF8));
     } // retranslateUi

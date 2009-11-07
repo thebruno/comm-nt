@@ -168,3 +168,12 @@ void Client::SendToGroup(Group g, std::string text){
         Message m(GROUPMESSAGE, DateTimeNow(), Me, User(), g, text);
 	SendAsynchronously(m);
 }
+
+
+bool Client::IsUserLogged(User &u) {
+        std::list<User>::iterator it;
+        for (it = Users.begin(); it != Users.end(); it++)
+                if (*it == u)
+                        return true;
+        return false;
+}
