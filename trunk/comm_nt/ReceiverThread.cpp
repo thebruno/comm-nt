@@ -12,8 +12,15 @@ void ReceiverThread::run(){
         if (SelectSocket::CanRead(Communicator->CommSocket, true)) {
             Message m = Message();
             Result result = Communicator->Receive(m);
-            if (result != OK)
+            if (result != OK) {
+                std::cout << " koniec 1" <<std::endl;
+                Communicator->InputMsgsAccess->Wait();
+                Communicator->InputMsgs.push_back(Message(LOGOUT, DateTimeNow(), User(), User(), Group(), ""));
+                Communicator->InputMsgsAccess->Release();
+                Communicator->NewInputMessage->Release();
+                emit MessageReceived();
                 break;
+            }
             std::cout << "Received: " << m.ToString() << " from user: " << m.Sender.ToString() << std::endl;
             Communicator->InputMsgsAccess->Wait();
             Communicator->InputMsgs.push_back(m);

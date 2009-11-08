@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'loginform.ui'
 **
-** Created: Sun 8. Nov 01:30:32 2009
+** Created: Sun 8. Nov 14:55:07 2009
 **      by: Qt User Interface Compiler version 4.5.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!

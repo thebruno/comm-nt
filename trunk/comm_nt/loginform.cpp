@@ -60,5 +60,6 @@ void LoginForm::on_pushButton_2_clicked()
 
 int LoginForm::execExtended(){
     m_ui->txtBoxLogin->clear();
+    m_ui->txtBoxLogin->setFocus();
     return exec();
 }

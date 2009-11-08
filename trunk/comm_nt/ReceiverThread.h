@@ -10,14 +10,13 @@ class ReceiverThread : public QThread
     Q_OBJECT
 
 public:
+    // pointer to communicator
     Client * Communicator;
     ReceiverThread(void * client);
     ~ReceiverThread();
 
-
 signals:
     void MessageReceived();
-
 
 protected:
     void run();
