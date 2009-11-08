@@ -34,7 +34,7 @@ void MainWindow::on_actionExit_triggered()
 
 void MainWindow::on_actionAbout_triggered()
 {
-    QMessageBox::information(this, QString("About..."), QString("Communicator 1.0 for Windows NT.\nWritten by Konrad Ba³ys inf9, OS2, POLŒL PL."), QMessageBox::Ok, QMessageBox::NoButton);
+    QMessageBox::information(this, QString("About..."), QString("Communicator 1.0 for Windows NT.\nWritten by Konrad Ba³ys inf9, OS2, POLSL PL."), QMessageBox::Ok, QMessageBox::NoButton);
 }
 
 void MainWindow::on_actionConnect_triggered()
