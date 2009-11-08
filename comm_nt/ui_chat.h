@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'chat.ui'
 **
-** Created: Sun 8. Nov 21:16:31 2009
+** Created: Sun 8. Nov 21:25:06 2009
 **      by: Qt User Interface Compiler version 4.5.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -47,7 +47,7 @@ public:
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         grBoxChatWith = new QGroupBox(centralwidget);
         grBoxChatWith->setObjectName(QString::fromUtf8("grBoxChatWith"));
-        grBoxChatWith->setGeometry(QRect(0, 0, 371, 241));
+        grBoxChatWith->setGeometry(QRect(10, 0, 361, 241));
         pushButton = new QPushButton(grBoxChatWith);
         pushButton->setObjectName(QString::fromUtf8("pushButton"));
         pushButton->setGeometry(QRect(200, 260, 75, 23));
@@ -56,12 +56,12 @@ public:
         pushButton_2->setGeometry(QRect(300, 270, 75, 23));
         txtChatHistory = new QTextEdit(grBoxChatWith);
         txtChatHistory->setObjectName(QString::fromUtf8("txtChatHistory"));
-        txtChatHistory->setGeometry(QRect(10, 20, 351, 111));
+        txtChatHistory->setGeometry(QRect(10, 20, 341, 111));
         txtChatHistory->setUndoRedoEnabled(false);
         txtChatHistory->setReadOnly(true);
         txtPlainChat = new QPlainTextEdit(grBoxChatWith);
         txtPlainChat->setObjectName(QString::fromUtf8("txtPlainChat"));
-        txtPlainChat->setGeometry(QRect(10, 140, 351, 91));
+        txtPlainChat->setGeometry(QRect(10, 140, 341, 91));
         btnSend = new QPushButton(centralwidget);
         btnSend->setObjectName(QString::fromUtf8("btnSend"));
         btnSend->setGeometry(QRect(10, 250, 81, 23));
