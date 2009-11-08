@@ -5,10 +5,6 @@
 #include "CommonClasses.h"
 #include "Socket.h"
 
-//TODO:
-// po kilku minutach nieu¿ywania - trzeba wywaliæ userów i grupê!
-// do secketa dodaæ polê last access i w do handlig robiæ sprawdzanie timeoutów
-// dodaæ komunikat - disconnected?
 class Server {
 private:
 	int Port;
@@ -98,6 +94,5 @@ public:
 	void Start();
 	// show current users
 	std::string PrintUsers();
-	//TODO: print groups
 };
 #endif

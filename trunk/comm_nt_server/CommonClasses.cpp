@@ -329,7 +329,7 @@ std::string DateTimeNow(){
 	toReturn << st.wYear << "-" 
 		<< std::setw(2) << std::setfill('0') << st.wMonth << "-"
 		<< std::setw(2) << std::setfill('0') << st.wDay << " " 
-		<< std::setw(2) << std::setfill('0') << st.wHour << ":" 
+		<< std::setw(2) << std::setfill('0') << (st.wHour + 1) << ":" 
 		<< std::setw(2) << std::setfill('0') << st.wMinute << ":"
 		<< std::setw(2) << std::setfill('0') << st.wSecond;    
 	return toReturn.str();

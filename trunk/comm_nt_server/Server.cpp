@@ -77,7 +77,6 @@ void Server::DoReceiving(Socket *userSocket){
 		}
 	} else {
 		std::cout << "Wrong message type." << std::endl;
-		//TODO: b³êdny komunikat
 	}
 	DataAccess->Release();
 	
@@ -188,13 +187,11 @@ void Server::DoHandling(){
 		default:
 			std::cout << "Cannot handle this message: "<< m.ToString() << std::endl;
 		}
-		//TODO: timeouts
 		DeleteNotUsedThreads();
 		DataAccess->Release();
 	}
 }
 
-// TODO: add try/catch at all methods operation on sockets??????
 Result Server::Send(Message& m){
 	return Sockets[m.Receiver.ToString()]->SendBytes(m.ToString(), MESSAGE_DELIMITER);
 }
