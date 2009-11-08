@@ -29,9 +29,9 @@
    <widget class="QGroupBox" name="grBoxChatWith">
     <property name="geometry">
      <rect>
-      <x>0</x>
+      <x>10</x>
       <y>0</y>
-      <width>371</width>
+      <width>361</width>
       <height>241</height>
      </rect>
     </property>
@@ -69,7 +69,7 @@
       <rect>
        <x>10</x>
        <y>20</y>
-       <width>351</width>
+       <width>341</width>
        <height>111</height>
       </rect>
      </property>
@@ -85,7 +85,7 @@
       <rect>
        <x>10</x>
        <y>140</y>
-       <width>351</width>
+       <width>341</width>
        <height>91</height>
       </rect>
      </property>
