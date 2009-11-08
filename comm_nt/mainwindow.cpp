@@ -90,7 +90,9 @@ void MainWindow::DoHandling(){
             break;
          }
         case LOGOUT: {
-            // not used
+            // disconnected by server
+            on_actionDisconnect_triggered();
+            QMessageBox::warning(this, QString("ERROR") , QString("Connection to server lost."), QMessageBox::Ok,QMessageBox::NoButton);
             break;
         }
         case RESULT: {

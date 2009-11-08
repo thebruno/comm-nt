@@ -20,20 +20,31 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    // login form
     LoginForm * LogIn;
 
     Ui::MainWindow *ui;
+    // close all open chats
     void CloseAllWindows();
+    // check if window with chat group g exists
     bool ChatWindowEsists(Group & g);
+    // check if window for user u exists
     bool ChatWindowEsists(User & u);
+    // send message to user
     void SendMsgFromGUI(Group receivers, std::string msg);
+    // returns a currently logged user
     User WhoAmI();
 public slots:
+    // fired when new message comes
     void MessageReceived();
 private:
+    // handles all received messages
     void DoHandling();
+    // opened user chat
     std::map<std::string, Chat *> ChatWindows;    
+    // display user list in main window
     void HandleUserList();
+    // closes windows if any of user logs out
     void HandleUserWindows();
     Client * Communicator;
 private slots:

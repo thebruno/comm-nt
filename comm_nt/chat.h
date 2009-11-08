@@ -14,9 +14,13 @@ class Chat : public QMainWindow {
 public:
     Chat(Group & receivers, QWidget *parent = 0);
     ~Chat();
+    // reference to parent window
     MainWindow * Main;
+    // fill message history chat with message from other user
     void FillMessage(Message& m);
+    // fill message history chat with current user message
     void FillMessage(std::string sender, std::string created, std::string text);
+    // get this window chat recivers
     Group GetReceivers();
     void showAndPosition(QWidget * parent);
 protected:
