@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'loginform.ui'
 **
-** Created: Sun 8. Nov 21:23:46 2009
+** Created: Mon 9. Nov 10:58:52 2009
 **      by: Qt User Interface Compiler version 4.5.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -112,7 +112,7 @@ public:
         pushButton_2->setText(QApplication::translate("LoginForm", "Cancel", 0, QApplication::UnicodeUTF8));
         groupBox->setTitle(QApplication::translate("LoginForm", "Enter Server Parameters", 0, QApplication::UnicodeUTF8));
         label_2->setText(QApplication::translate("LoginForm", "Port", 0, QApplication::UnicodeUTF8));
-        txtBoxPort->setText(QApplication::translate("LoginForm", "666", 0, QApplication::UnicodeUTF8));
+        txtBoxPort->setText(QApplication::translate("LoginForm", "6666", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("LoginForm", "Server", 0, QApplication::UnicodeUTF8));
         label_3->setText(QApplication::translate("LoginForm", "Login", 0, QApplication::UnicodeUTF8));
         Q_UNUSED(LoginForm);

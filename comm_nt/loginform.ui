@@ -98,7 +98,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>666</string>
+     <string>6666</string>
     </property>
    </widget>
    <widget class="QLabel" name="label">
