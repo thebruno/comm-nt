@@ -49,16 +49,20 @@ void MainWindow::on_actionConnect_triggered()
 
             } catch (SocketException s) {
                 QMessageBox::warning(this, QString("Error"), QString("Cannot connect to server!"), QMessageBox::Ok,QMessageBox::NoButton);
+                Communicator = 0;
                 return;
             }
             try {
                 Communicator->LogIn(LogIn->UserLogin);
+                connect(Communicator->QTReceiverThread,  SIGNAL(MessageReceived()), this, SLOT(MessageReceived()));
 
             } catch (SocketException s) {
                 QMessageBox::warning(this, QString("Error"), QString("Cannot login to server!"), QMessageBox::Ok, QMessageBox::NoButton);
+                //delete Communicator;
+                Communicator = 0;
                 return;
             }
-            connect(Communicator->QTReceiverThread,  SIGNAL(MessageReceived()), this, SLOT(MessageReceived()));
+
         } else
             return;
     }
@@ -78,6 +82,8 @@ void MainWindow::on_actionDisconnect_triggered()
 
 void MainWindow::DoHandling(){  
     Message m;
+    if (Communicator == 0)
+        return;
     Communicator->NewInputMessage->Wait();
     Communicator->InputMsgsAccess->Wait();
     m = Communicator->InputMsgs.back();
