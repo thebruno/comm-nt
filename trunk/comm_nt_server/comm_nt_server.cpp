@@ -57,7 +57,7 @@ void Tests(){
 
 
 int _tmain(int argc, _TCHAR* argv[]){
-	int port = 666;
+	int port = 6666;
 	int maxConnections = 255;
 	std::cout << "Welcome to Simple Windows Communicator Server\nAuthor: Konrad Balys, OS2" << std::endl<< std::endl;
 	std::cout << DateTimeNow() << ": ";

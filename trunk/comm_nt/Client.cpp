@@ -70,19 +70,17 @@ Result Client::Connect(std::string host, int port) {
 
 Result Client::Disconnect() {
 	if (IsConnected) {
+                QTReceiverThread->terminate();
+                SenderThread->Terminate();
 		Port = 0;
 		Host = "";
-		IP = "";
+		IP = "";               
 		delete CommSocket;
-
 		delete NewInputMessage;
 		delete NewOutputMessage;
 		delete DataAccess;
 		delete InputMsgsAccess;
 		delete OutputMsgsAccess;
-
-                QTReceiverThread->terminate();
-		SenderThread->Terminate();
 
                 delete QTReceiverThread;
 		delete SenderThread;

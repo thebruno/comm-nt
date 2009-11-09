@@ -7,7 +7,7 @@ int _tmain(int argc, _TCHAR* argv[])
 {
 	/*ClientSocket c("localhost", 1986);
 	c.SendBytes(Message (LOGIN, User("ala", "IP"), User(), Group(), "zawartoœæ wiadomoœci").ToString(), MESSAGE_DELIMITER);*/
-	Client * client = new Client("localhost", 666, true);
+	Client * client = new Client("AbacaNETFP", 6666, true);
 	std::string toSend, received;
 	Message m;
 	

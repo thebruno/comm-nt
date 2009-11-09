@@ -149,12 +149,12 @@ Result Socket::SendBytes(const std::string& s, char delimiter) {
 // wywo³anie z klasy bazowej, niepotrzebne utworzenie bazowego socketa?
 ServerSocket::ServerSocket(int port, int connections, bool blocking) {
 	sockaddr_in address;
-
-	memset(&address, 0, sizeof(address));
-
-	address.sin_family = PF_INET;             
+	//memset(&address, 0, sizeof(address));
+	address.sin_family = AF_INET;
+	address.sin_addr.s_addr = INADDR_ANY;      
 	address.sin_port = htons(port);          
-	SocketHandle = socket(AF_INET, SOCK_STREAM, 0);
+	SocketHandle = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+
 	if (SocketHandle == INVALID_SOCKET) {
 		throw SocketException("INVALID_SOCKET\nCannot create server socket.");
 	}
@@ -165,7 +165,7 @@ ServerSocket::ServerSocket(int port, int connections, bool blocking) {
 	}
 
 	/* bind the socket to the internet address */
-	if (bind(SocketHandle, (sockaddr *)&address, sizeof(sockaddr_in)) == SOCKET_ERROR) {
+	if (bind(SocketHandle, (sockaddr *)&address, sizeof(address)) == SOCKET_ERROR) {
 		this->Close();
 		throw SocketException("INVALID_SOCKET\nCannot bind the socket to the internet address.");
 	}
@@ -194,15 +194,21 @@ ClientSocket::ClientSocket(const std::string& host, int port) : Socket() {
 	std::string error;
 
 	hostent *hostInfo;
-	if ((hostInfo = gethostbyname(host.c_str())) == 0 && (hostInfo = gethostbyaddr(host.c_str(), 4, AF_INET))) {
-		throw SocketException(strerror(errno));
-	}
+	struct in_addr addr;
+	addr.s_addr = inet_addr(host.c_str() );
+	if (host.size () > 1) {
 
+		if ( isalpha(host[0]) && (hostInfo = gethostbyname(host.c_str())) == 0 )  {
+			throw SocketException(strerror(errno));
+		} else  if (isdigit(host[0]) &&(hostInfo = gethostbyaddr((char *) &addr, 4, AF_INET))==0){
+			throw SocketException(strerror(errno));
+		} 
+	} 
 	sockaddr_in address;
 	address.sin_family = AF_INET;
 	address.sin_port = htons(port);
 	address.sin_addr = *((in_addr *)hostInfo->h_addr);
-	memset(&(address.sin_zero), 0, 8); 
+	//memset(&(address.sin_zero), 0, 8); 
 
 	if (::connect(SocketHandle, (sockaddr *) &address, sizeof(sockaddr))) {
 		throw SocketException(strerror(WSAGetLastError()));

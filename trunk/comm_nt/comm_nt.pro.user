@@ -38,7 +38,7 @@
  </data>
  <data>
   <variable>activebuildconfiguration</variable>
-  <value type="QString" >Release</value>
+  <value type="QString" >Debug</value>
  </data>
  <data>
   <variable>buildConfiguration-Debug</variable>
@@ -73,11 +73,6 @@
     <value type="QString" >LOCALAPPDATA=C:\Users\Bruno\AppData\Local</value>
     <value type="QString" >LOGONSERVER=\\BRUNOPC</value>
     <value type="QString" >MOZ_PLUGIN_PATH=C:\Users\Bruno\AppData\Roaming\Nowe Gadu-Gadu\_userdata</value>
-    <value type="QString" >MPCONFIG_PRODUCTAPPDATAPATH=C:\ProgramData\Microsoft\Windows Defender</value>
-    <value type="QString" >MPCONFIG_PRODUCTCODENAME=AntiSpyware</value>
-    <value type="QString" >MPCONFIG_PRODUCTPATH=C:\Program Files\Windows Defender</value>
-    <value type="QString" >MPCONFIG_PRODUCTUSERAPPDATAPATH=C:\Users\Bruno\AppData\Local\Microsoft\Windows Defender</value>
-    <value type="QString" >MPCONFIG_REPORTINGGUID=A6261177-E39D-42F3-81CB-C78D43799222</value>
     <value type="QString" >NUMBER_OF_PROCESSORS=2</value>
     <value type="QString" >OPENSSL_CONF=C:\Program Files\OpenSSL\bin\openssl.cnf</value>
     <value type="QString" >OS=Windows_NT</value>
@@ -133,11 +128,6 @@
     <value type="QString" >LOCALAPPDATA=C:\Users\Bruno\AppData\Local</value>
     <value type="QString" >LOGONSERVER=\\BRUNOPC</value>
     <value type="QString" >MOZ_PLUGIN_PATH=C:\Users\Bruno\AppData\Roaming\Nowe Gadu-Gadu\_userdata</value>
-    <value type="QString" >MPCONFIG_PRODUCTAPPDATAPATH=C:\ProgramData\Microsoft\Windows Defender</value>
-    <value type="QString" >MPCONFIG_PRODUCTCODENAME=AntiSpyware</value>
-    <value type="QString" >MPCONFIG_PRODUCTPATH=C:\Program Files\Windows Defender</value>
-    <value type="QString" >MPCONFIG_PRODUCTUSERAPPDATAPATH=C:\Users\Bruno\AppData\Local\Microsoft\Windows Defender</value>
-    <value type="QString" >MPCONFIG_REPORTINGGUID=A6261177-E39D-42F3-81CB-C78D43799222</value>
     <value type="QString" >NUMBER_OF_PROCESSORS=2</value>
     <value type="QString" >OPENSSL_CONF=C:\Program Files\OpenSSL\bin\openssl.cnf</value>
     <value type="QString" >OS=Windows_NT</value>
@@ -188,11 +178,6 @@
     <value type="QString" >LOCALAPPDATA=C:\Users\Bruno\AppData\Local</value>
     <value type="QString" >LOGONSERVER=\\BRUNOPC</value>
     <value type="QString" >MOZ_PLUGIN_PATH=C:\Users\Bruno\AppData\Roaming\Nowe Gadu-Gadu\_userdata</value>
-    <value type="QString" >MPCONFIG_PRODUCTAPPDATAPATH=C:\ProgramData\Microsoft\Windows Defender</value>
-    <value type="QString" >MPCONFIG_PRODUCTCODENAME=AntiSpyware</value>
-    <value type="QString" >MPCONFIG_PRODUCTPATH=C:\Program Files\Windows Defender</value>
-    <value type="QString" >MPCONFIG_PRODUCTUSERAPPDATAPATH=C:\Users\Bruno\AppData\Local\Microsoft\Windows Defender</value>
-    <value type="QString" >MPCONFIG_REPORTINGGUID=A6261177-E39D-42F3-81CB-C78D43799222</value>
     <value type="QString" >NUMBER_OF_PROCESSORS=2</value>
     <value type="QString" >OPENSSL_CONF=C:\Program Files\OpenSSL\bin\openssl.cnf</value>
     <value type="QString" >OS=Windows_NT</value>

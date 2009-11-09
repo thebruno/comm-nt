@@ -48,14 +48,14 @@ void MainWindow::on_actionConnect_triggered()
                 Communicator = new Client(LogIn->Host, LogIn->Port, true);
 
             } catch (SocketException s) {
-                QMessageBox::warning(this, QString("Error"), QString("Cannoct connect to server!"), QMessageBox::Ok,QMessageBox::NoButton);
+                QMessageBox::warning(this, QString("Error"), QString("Cannot connect to server!"), QMessageBox::Ok,QMessageBox::NoButton);
                 return;
             }
             try {
                 Communicator->LogIn(LogIn->UserLogin);
 
             } catch (SocketException s) {
-                QMessageBox::warning(this, QString("Error"), QString("Cannoct login to server!"), QMessageBox::Ok, QMessageBox::NoButton);
+                QMessageBox::warning(this, QString("Error"), QString("Cannot login to server!"), QMessageBox::Ok, QMessageBox::NoButton);
                 return;
             }
             connect(Communicator->QTReceiverThread,  SIGNAL(MessageReceived()), this, SLOT(MessageReceived()));
