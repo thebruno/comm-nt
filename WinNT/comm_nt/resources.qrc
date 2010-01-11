@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/icons" >
+        <file>about.ico</file>
+        <file>cancel.ico</file>
+        <file>chat.ico</file>
+        <file>connect.ico</file>
+        <file>disconnect.ico</file>
+        <file>exit.ico</file>
+        <file>ok.ico</file>
+        <file>password.ico</file>
+        <file>send.ico</file>
+        <file>user.ico</file>
+        <file>chat2.ico</file>
+    </qresource>
+</RCC>
