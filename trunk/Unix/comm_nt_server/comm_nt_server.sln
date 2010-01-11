@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "comm_nt_server", "comm_nt_server.vcproj", "{5EBD00A0-5A25-4DEA-9FA0-C546FFC18ED7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SimpleClient", "..\SimpleClient\SimpleClient.vcproj", "{38F438E6-8D02-44E1-8EBF-389FC3300393}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5EBD00A0-5A25-4DEA-9FA0-C546FFC18ED7} = {5EBD00A0-5A25-4DEA-9FA0-C546FFC18ED7}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5EBD00A0-5A25-4DEA-9FA0-C546FFC18ED7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5EBD00A0-5A25-4DEA-9FA0-C546FFC18ED7}.Debug|Win32.Build.0 = Debug|Win32
+		{5EBD00A0-5A25-4DEA-9FA0-C546FFC18ED7}.Release|Win32.ActiveCfg = Release|Win32
+		{5EBD00A0-5A25-4DEA-9FA0-C546FFC18ED7}.Release|Win32.Build.0 = Release|Win32
+		{38F438E6-8D02-44E1-8EBF-389FC3300393}.Debug|Win32.ActiveCfg = Debug|Win32
+		{38F438E6-8D02-44E1-8EBF-389FC3300393}.Debug|Win32.Build.0 = Debug|Win32
+		{38F438E6-8D02-44E1-8EBF-389FC3300393}.Release|Win32.ActiveCfg = Release|Win32
+		{38F438E6-8D02-44E1-8EBF-389FC3300393}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
