@@ -64,7 +64,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Ws2_32.lib"
+				AdditionalDependencies="Ws2_32.lib pthreadVCE2.lib"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -137,7 +137,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Ws2_32.lib"
+				AdditionalDependencies="Ws2_32.lib pthreadVCE2.lib"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -212,6 +212,10 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath=".\Utilities.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -224,6 +228,18 @@
 			</File>
 			<File
 				RelativePath=".\CommonClasses.h"
+				>
+			</File>
+			<File
+				RelativePath=".\pthread.h"
+				>
+			</File>
+			<File
+				RelativePath=".\sched.h"
+				>
+			</File>
+			<File
+				RelativePath=".\semaphore.h"
 				>
 			</File>
 			<File
@@ -243,10 +259,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Utilities.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\Utilities.h"
 				>
 			</File>
@@ -256,6 +268,14 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+			<File
+				RelativePath=".\pthreadVCE2.dll"
+				>
+			</File>
+			<File
+				RelativePath=".\pthreadVCE2.lib"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"
