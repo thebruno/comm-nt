@@ -32,11 +32,11 @@ private:
 	SysSemaphore * NewMessage;
 
 	// listener thread api funtion
-	static unsigned long __stdcall ListenerFunction(void*s);
+	static void* ListenerFunction(void* s);
 	// reciever thread api funtion
-	static unsigned long __stdcall ReceiverFunction(void*s);
+	static void* ReceiverFunction(void* s);
 	// handler thread api funtion
-	static unsigned long __stdcall HandlerFunction(void*s);
+	static void* HandlerFunction(void* s);
 	
 	// listens for user to connect
 	SysThread *ListenerThread;

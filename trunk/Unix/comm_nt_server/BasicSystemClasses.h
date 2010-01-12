@@ -6,7 +6,7 @@
 
 #include "pthread.h"
 #include "semaphore.h"
-#include "xutility"
+#include <utility>
 
 
 //! for compatibility
@@ -36,7 +36,7 @@ public:
 	~SysSemaphore(){
 		sem_destroy(&SemID);
 	}
-} * temp;
+};
 
 //! universal thread class
 class SysThread: public SysHandle{
@@ -112,8 +112,6 @@ public:
 	}
 	~SysThread(){
 		if (toDelete != 0) {
-			if (toDelete->second != 0)
-				delete toDelete->second;
 			delete toDelete;
 			toDelete = 0;
 		}

@@ -14,13 +14,13 @@ Server::~Server(){
 	Stop();
 }
 
-unsigned long __stdcall Server::ListenerFunction(void*s){
+void* Server::ListenerFunction(void* s){
 	Server * S = reinterpret_cast<Server*>(s);
 	S->DoListening();
 	return 0;
 }
 
-unsigned long __stdcall Server::ReceiverFunction(void*s){
+void* Server::ReceiverFunction(void*s){
 	std::pair<Server *, Socket *> * SSpair = reinterpret_cast<std::pair<Server *, Socket *> *>(s);
 	Server * S = SSpair->first;
 	Socket * userSocket = SSpair->second;
@@ -28,7 +28,7 @@ unsigned long __stdcall Server::ReceiverFunction(void*s){
 	return 0;
 }
 
-unsigned long __stdcall Server::HandlerFunction(void*s){
+void* Server::HandlerFunction(void*s){
 	Server * S = (Server *)(s);
 	S->DoHandling();
 	return 0;

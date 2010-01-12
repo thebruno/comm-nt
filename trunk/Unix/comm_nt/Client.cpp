@@ -1,14 +1,11 @@
 #include "stdafx.h"
 #include "Client.h"
 
-unsigned long __stdcall Client:: SenderFunction(void*c){
+void* Client:: SenderFunction(void*c){
 	Client * C = reinterpret_cast<Client*>(c);
 	C->DoSending();
 	return 0;
 }
-
-
-
 
 
 void Client::DoSending(){
