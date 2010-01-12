@@ -23,10 +23,13 @@ HEADERS += mainwindow.h \
     Client.h \
     BasicSystemClasses.h \
     loginform.h \
-    chat.h
+    chat.h \
+    semaphore.h \
+    pthread.h
 FORMS += mainwindow.ui \
     loginform.ui \
     chat.ui
 LIBS += -L/ \
-    -lWS2_32
+    -lWS2_32 \
+    -LD:\pthreadVC2.lib
 RESOURCES += resources.qrc

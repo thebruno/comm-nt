@@ -18,6 +18,7 @@ Chat::Chat(Group &receivers, QWidget *parent) :
     m_ui->grBoxChatWith->setTitle(QString(title.c_str()));
     Main = static_cast<MainWindow*>(parent);    
     m_ui->txtPlainChat->setFocus();
+    //QMessageBox::warning(this, QString("test"), QString("test2"), QMessageBox::Ok, QMessageBox::Close);
     //this->setAttribute(Qt::WA_DeleteOnClose, true);
 }
 

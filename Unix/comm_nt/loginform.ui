@@ -48,6 +48,9 @@
        <iconset resource="resources.qrc">
         <normaloff>:/icons/ok.ico</normaloff>:/icons/ok.ico</iconset>
       </property>
+      <property name="autoDefault">
+       <bool>false</bool>
+      </property>
      </widget>
     </item>
     <item>
@@ -58,6 +61,9 @@
       <property name="icon">
        <iconset resource="resources.qrc">
         <normaloff>:/icons/cancel.ico</normaloff>:/icons/cancel.ico</iconset>
+      </property>
+      <property name="autoDefault">
+       <bool>false</bool>
       </property>
      </widget>
     </item>

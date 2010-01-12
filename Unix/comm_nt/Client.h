@@ -38,7 +38,7 @@ class Client {
 	bool IsLogged;
 	bool IsConnected;
 	// sender thread api funtion
-	static unsigned long __stdcall SenderFunction(void *c);
+        static void* SenderFunction(void *c);
 public:
         bool IsUserLogged(User &u);
         ReceiverThread * QTReceiverThread;
