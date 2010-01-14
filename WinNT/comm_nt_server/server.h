@@ -10,6 +10,7 @@ private:
 	int Port;
 	int MaxConnections;
 	bool Started;
+	bool Stopping;
 	// this socket listen for new user to connect
 	ServerSocket* ListenSocket; 
 	// sockets indexed by users

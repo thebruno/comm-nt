@@ -64,7 +64,7 @@ public:
 	}
 	void Terminate(){
 		if (GetHandle() != 0 && GetHandle() != INVALID_HANDLE_VALUE){
-			TerminateThread(GetHandle(),1);
+			TerminateThread(GetHandle(),0);
 		}
 	}
 	~SysThread(){
