@@ -24,6 +24,7 @@ unsigned long __stdcall Server::ReceiverFunction(void*s){
 	std::pair<Server *, Socket *> * SSpair = reinterpret_cast<std::pair<Server *, Socket *> *>(s);
 	Server * S = SSpair->first;
 	Socket * userSocket = SSpair->second;
+	delete SSpair;
 	S->DoReceiving(userSocket);
 	return 0;
 }
@@ -37,7 +38,10 @@ unsigned long __stdcall Server::HandlerFunction(void*s){
 void Server::DoListening(){
 	while (1) {
 		Socket* s = ListenSocket->Accept();
-		SysThread * receiverThread = new SysThread(Server::ReceiverFunction, (void *) &std::pair<Server *, Socket *>(this, s));
+		std::pair<Server *, Socket *> * parameters = new std::pair<Server *, Socket *>;
+		parameters->first = this;
+		parameters->second = s;
+		SysThread * receiverThread = new SysThread(Server::ReceiverFunction, (void *) parameters); 
 		UnverifiedReceiverThreads[s] = receiverThread;
 		receiverThread->Start();		
 	}
@@ -66,7 +70,7 @@ void Server::DoReceiving(Socket *userSocket){
 			info.append("Login: ").append(m.Sender.Login).append(" is not available. Please choose different login.");
 			Message temp (RESULT, DateTimeNow(), User(), LOGIN, FAILED, info) ;			
 			this->Send(temp, userSocket);
-			delete userSocket;
+			//delete userSocket;
 			return;
 		} else {
 			AddUser(u, userSocket);
@@ -117,6 +121,8 @@ void Server::DoHandling(){
 	std::list<User>::iterator uIt;
 	while(1){
 		NewMessage->Wait();
+		if (Stopping)
+			break;
 		// get message
 		InputMsgsAccess->Wait();
 		Message m = InputMsgs.front();
@@ -219,6 +225,7 @@ Result Server::Receive(Message &m){
 
 void Server::Start(){ 
 	if (!Started) {
+		Stopping = false;
 		Started = true;
 		ListenSocket = new ServerSocket(Port, MaxConnections);
 		InputMsgsAccess = new SysSemaphore(1,1);
@@ -257,8 +264,10 @@ void Server::Stop(){
 			delete mit->second;			
 		}
 		ReceiverThreads.clear();
-
-		HandlerThread->Terminate();
+		this->Stopping = true;
+		NewMessage->Release();
+		HandlerThread->Join();
+		//HandlerThread->Terminate();
 		delete HandlerThread;
 
 		DeleteNotUsedThreads();
